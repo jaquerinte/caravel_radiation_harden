@@ -19,20 +19,21 @@ The main code part is in the ecc_registers folder inside of the rtl folder. The 
 
 The module is implemented with 32 bit word size and 8 registers. The counters are 32 bit counters.
 
-## Module ports:
-- **Input ports**
+
+## Module Ports:
+- **Input Ports**
   -  clk_i: Clock signal for the module.
   
   -  rst_i: Reset signal for the module, this signal clears all of the values for the internal register values and all of the counters.
   
   - data_to_register_i [31:0]: The 32 bit input value that will be store in the register file.
 
-  - register_i [3:0]: Signal to select the register that the operation will be perform.
+  - register_i [2:0]: Signal to select the register that the operation will be perform.
 
   - wregister_i: Signal to indicate that the operation that you want is to write the input data to a register.
   
   - rregister_i: Signal to indicate that the operation that you want is to read from the register file.
-- **Output ports**
+- **Output Ports**
   - store_data_o [31:0]: The 32 bit value that was store in the register file
 
   - operation:result_o [1:0]. This is a two bit output that indicates the sate of the data.  
@@ -42,14 +43,48 @@ The module is implemented with 32 bit word size and 8 registers. The counters ar
     - **11**: Not defined state
 
 Also some extra ports can be use in the case to add connection to a [wishbone bus](https://en.wikipedia.org/wiki/Wishbone_(computer_bus)). For the current version the whisbone is only connected to the 32 bit counter that counts the number of 1 bit flip that have happened.
-## Module extra ports:
-- **Input ports**
+## Module Extra Ports:
+- **Input Ports**
   - valid_i: Union of the clk and the strobe values for the whisbone bus
   - wstrb_i [3:0]: Whisbone Strobe.
   - wdata_i [31:0]: Whisbone data input. 
-- **Output ports**
+- **Output Ports**
   - ready_o. Whisbone ack.
   - rdata_o [31:0]: Whisbone data output.
+
+## Caravel Connections
+The module is connected to the [caravel](https://github.com/efabless/caravel) project so in this section we will define how is connected to the processor in order to interact with it.
+
+Caravel offers multiple way to interact with the user project inside of it. This ways are GPIO ports, logic analyzer probes, and the whisbone interconnection, user maskable interrupt signals. 
+
+### **GPIO Connections**
+- GPIO pins [19:0] are not been use.
+- GPIO pins [35:20] are connected to store_data_o [15:0].
+- GPIO pins [37:36] are connected to operation:result_o [1:0].
+  
+### **Logic Analyzer Probes**
+- Input probes: 
+  - la_data_in [0]       ⟶ rregister_i.
+  - la_data_in [1]       ⟶ wregister_i.
+  - la_data_in [4:2]     ⟶ register_i [2:0].
+  - la_data_in [31:5]    ⟶ Not connected.
+  - la_data_in [63:32]   ⟶ data_to_register_i [31:0].
+  - la_data_in [64]      ⟶ clk_i.
+  - la_data_in [65]      ⟶ rst_i.
+  - la_data_in [127:66]  ⟶ Not connected.
+  
+- Output probes:
+  - la_data_out [92:0]  ⟶ Not connected.
+  - la_data_in [94:93]  ⟶ operation:result_o [1:0].
+  - la_data_in [127:95] ⟶ store_data_o [31:0].
+
+### **Whisbone Connection**
+
+The whisbone connection is 1 to 1 with the user project wrapper. 
+
+### **User Maskable Interrupt Signals**
+
+This signals are not connected. 
 
 
 ## **Modules Description**
