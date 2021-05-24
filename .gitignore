@@ -1,2 +1,5 @@
 checks/
 *.vcd
+*.hex
+*.vvp
+*.elf

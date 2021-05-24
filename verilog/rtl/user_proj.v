@@ -37,12 +37,12 @@
 
 module user_proj #(
     parameter integer WORD_SIZE = 32,
-    parameter integer REGISTERS = 8,
-    parameter integer LINE_SIZE = 128,
-    parameter integer ALUOP_SIZE = 4,
-    parameter integer REGDIRSIZE = 4,
+    parameter integer REGISTERS = 32,
+    parameter integer REGDIRSIZE = 5,
     parameter integer ECCBITS = 7,
-    parameter integer VERIFICATION_PINS = 2
+    parameter integer VERIFICATION_PINS = 2,
+    parameter integer WHISBONE_ADR = 32,
+    parameter integer COUNTERSIZE = 32
 )(
 `ifdef USE_POWER_PINS
     inout vdda1,	// User area 1 3.3V supply
@@ -103,7 +103,7 @@ module user_proj #(
     assign wdata = wbs_dat_i;
 
     // IO
-    assign io_out = {6'b000000,output_data};
+    assign io_out = {output_verification,output_data[15:0], 20'b0};//{6'b000000,output_data};
     assign io_oeb = {(`MPRJ_IO_PADS-1){rst}};
 
     // IRQ
@@ -117,73 +117,31 @@ module user_proj #(
     //assign la_write = ~la_oenb[63:32] & ~{WORD_SIZE{valid}};
     assign la_data_out = {output_data, output_verification,{(127-WORD_SIZE+VERIFICATION_PINS){1'b0}}};
 
-    
-    
-
     register_file #(
         .WORD_SIZE (WORD_SIZE),
         .REGISTERS (REGISTERS),
-        .LINE_SIZE (LINE_SIZE),
-        .ALUOP_SIZE (ALUOP_SIZE),
+        .WHISBONE_ADR (WHISBONE_ADR),
+        .VERIFICATION_PINS (VERIFICATION_PINS),
         .REGDIRSIZE (REGDIRSIZE),
-        .ECCBITS (ECCBITS)
+        .ECCBITS (ECCBITS),
+        .COUNTERSIZE (COUNTERSIZE)
     ) register_file(
         .clk_i(clk),
         .rst_i(rst),
         .valid_i(valid),
         .wstrb_i(wstrb),
         .wdata_i(wdata),
+        .wbs_we_i(wbs_we_i),
         .data_to_register_i(la_data_in[63:32]),
-        .register_i(la_data_in[5:2]),
+        .register_i(la_data_in[6:2]),
         .wregister_i(la_data_in[1]),
         .rregister_i(la_data_in[0]),
+        .whisbone_addr_i (wbs_adr_i),
         .store_data_o(output_data),
         .operation_result_o(output_verification),
         .ready_o(wbs_ack_o),
         .rdata_o(rdata)
     );
-
-endmodule
-
-module counter #(
-    parameter BITS = 32
-)(
-    input clk,
-    input reset,
-    input valid,
-    input [3:0] wstrb,
-    input [BITS-1:0] wdata,
-    input [BITS-1:0] la_write,
-    input [BITS-1:0] la_input,
-    output ready,
-    output [BITS-1:0] rdata,
-    output [BITS-1:0] count
-);
-    reg ready;
-    reg [BITS-1:0] count;
-    reg [BITS-1:0] rdata;
-
-    always @(posedge clk) begin
-        if (reset) begin
-            count <= 0;
-            ready <= 0;
-        end else begin
-            ready <= 1'b0;
-            if (~|la_write) begin
-                count <= count + 1;
-            end
-            if (valid && !ready) begin
-                ready <= 1'b1;
-                rdata <= count;
-                if (wstrb[0]) count[7:0]   <= wdata[7:0];
-                if (wstrb[1]) count[15:8]  <= wdata[15:8];
-                if (wstrb[2]) count[23:16] <= wdata[23:16];
-                if (wstrb[3]) count[31:24] <= wdata[31:24];
-            end else if (|la_write) begin
-                count <= la_write & la_input;
-            end
-        end
-    end
 
 endmodule
 `default_nettype wire
