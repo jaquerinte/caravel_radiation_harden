@@ -7,7 +7,10 @@
 - Alvaro Jover-Alvarez (BSC-UPC)
 - Leonidas Kosmidis (BSC-UPC)
 ## **Description**
-The idea of this project is to design open source radiation harden techniques. For now the space industry is a very close source and restricted IP industry.  But from ESA and his partners there is increasing interest in open source software and hardware for space use. So the main goal of the project is to implement some radiation harden features and test them under radiation to see how this techniques behave. Due to the nature of this project that is using a node that is close to the nodes use in this industry we will be easy to compare to current solutions.
+![](readme_data/space_shuttle_patch_crop.png)
+
+
+The main goal of this project is to design open source radiation harden techniques. For now the space industry is a very close source and restricted IP industry.  But from ESA and his partners there is increasing interest in open source software and hardware for space use. So the main goal of the project is to implement some radiation harden features and test them under radiation to see how this techniques behave. Due to the nature of this project that is using a node that is close to the nodes use in this industry we will be easy to compare to current solutions.
 
 One of the first things implemented is a 32 bit register file that has ECC implementation. In this case is implemented 1 bit correction and 2 bit detention.
 
