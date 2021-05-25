@@ -6,9 +6,10 @@
 - Ivan Rodriguez Ferrandez (BSC-UPC)
 - Alvaro Jover-Alvarez (BSC-UPC)
 - Leonidas Kosmidis (BSC-UPC)
-## **Description**
-![](readme_data/space_shuttle_patch_crop.png)
 
+
+![](readme_data/space_shuttle_patch_crop.png)
+## **Description**
 
 The main goal of this project is to design open source radiation harden techniques. For now the space industry is a very close source and restricted IP industry.  But from ESA and his partners there is increasing interest in open source software and hardware for space use. So the main goal of the project is to implement some radiation harden features and test them under radiation to see how this techniques behave. Due to the nature of this project that is using a node that is close to the nodes use in this industry we will be easy to compare to current solutions.
 
