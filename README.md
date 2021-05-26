@@ -3,8 +3,8 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Caravel Build](https://github.com/efabless/caravel_project_example/actions/workflows/caravel_build.yml/badge.svg)](https://github.com/efabless/caravel_project_example/actions/workflows/caravel_build.yml)
 
 ## **Authors**
-- Ivan Rodriguez Ferrandez (BSC-UPC)
-- Alvaro Jover-Alvarez (BSC-UPC)
+- Ivan Rodriguez Ferrandez (UPC-BSC)
+- Alvaro Jover-Alvarez (UPC-BSC)
 - Leonidas Kosmidis (BSC-UPC)
 
 
