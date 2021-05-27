@@ -37,15 +37,15 @@ void clock(){
 	// end clock
 }
 
-void add_value_to_register(uint32_t value, uint32_t selected_regsiter){
+void add_value_to_register(uint32_t value, uint32_t selected_register){
 
-	reg_la0_data = (selected_regsiter << 2| 2 & 0x3);
+	reg_la0_data = (selected_register << 3| 2 & 0x7);
 	reg_la1_data = value;
 }
 
-void read_value_from_register(uint32_t selected_regsiter){
+void read_value_from_register(uint32_t selected_register){
 
-	reg_la0_data = (selected_regsiter << 2| 1 & 0x3);
+	reg_la0_data = (selected_register << 3| 1 & 0x7);
 
 }
 

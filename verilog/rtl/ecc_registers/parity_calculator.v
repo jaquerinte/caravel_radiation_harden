@@ -14,6 +14,7 @@ module parity_calculator #(
     (
         input  [WORD_SIZE - 1 : 0] data_to_register_i ,
         input  operate_i ,
+        input  operation_type_i,
         output [WORD_SIZE  + ECCBITS- 1 : 0] data_to_register_o 
     );
 
@@ -35,7 +36,7 @@ module parity_calculator #(
         intermidate_partity_bits_last = operate_i ?  data_to_register_i[0] ^ data_to_register_i[1] ^ data_to_register_i[2] ^ data_to_register_i[3] ^ data_to_register_i[4]^ data_to_register_i[5]^ data_to_register_i[6]^ data_to_register_i[7]^ data_to_register_i[8]^ data_to_register_i[9]^ data_to_register_i[10]^ data_to_register_i[11]^ data_to_register_i[12]^ data_to_register_i[13]^ data_to_register_i[14]^ data_to_register_i[15]^ data_to_register_i[16]^ data_to_register_i[17]^ data_to_register_i[18]^ data_to_register_i[19]^ data_to_register_i[20]^ data_to_register_i[21]^ data_to_register_i[22]^ data_to_register_i[23]^ data_to_register_i[24]^ data_to_register_i[25]^ data_to_register_i[26]^ data_to_register_i[27]^ data_to_register_i[28]^ data_to_register_i[29]^ data_to_register_i[30]^ data_to_register_i[31]: 1'b0;
         last_bit_value = intermidate_partity_bits_last ^ intermidate_partity_bits[0] ^ intermidate_partity_bits[1] ^ intermidate_partity_bits[2] ^ intermidate_partity_bits[3] ^ intermidate_partity_bits[4] ^ intermidate_partity_bits[5]  ; 
     end
-    assign data_to_register_o ={last_bit_value,data_to_register_i[31],data_to_register_i[30],data_to_register_i[29],data_to_register_i[28],data_to_register_i[27],data_to_register_i[26],intermidate_partity_bits[5],data_to_register_i[25],data_to_register_i[24],data_to_register_i[23],data_to_register_i[22],data_to_register_i[21],data_to_register_i[20],data_to_register_i[19],data_to_register_i[18],data_to_register_i[17],data_to_register_i[16],data_to_register_i[15],data_to_register_i[14],data_to_register_i[13],data_to_register_i[12],data_to_register_i[11],intermidate_partity_bits[4],data_to_register_i[10],data_to_register_i[9],data_to_register_i[8],data_to_register_i[7],data_to_register_i[6],data_to_register_i[5],data_to_register_i[4],intermidate_partity_bits[3],data_to_register_i[3],data_to_register_i[2],data_to_register_i[1],intermidate_partity_bits[2],data_to_register_i[0], intermidate_partity_bits[1], intermidate_partity_bits[0]};
+    assign data_to_register_o = operation_type_i ? {7'b0 ,data_to_register_i}:{last_bit_value,data_to_register_i[31],data_to_register_i[30],data_to_register_i[29],data_to_register_i[28],data_to_register_i[27],data_to_register_i[26],intermidate_partity_bits[5],data_to_register_i[25],data_to_register_i[24],data_to_register_i[23],data_to_register_i[22],data_to_register_i[21],data_to_register_i[20],data_to_register_i[19],data_to_register_i[18],data_to_register_i[17],data_to_register_i[16],data_to_register_i[15],data_to_register_i[14],data_to_register_i[13],data_to_register_i[12],data_to_register_i[11],intermidate_partity_bits[4],data_to_register_i[10],data_to_register_i[9],data_to_register_i[8],data_to_register_i[7],data_to_register_i[6],data_to_register_i[5],data_to_register_i[4],intermidate_partity_bits[3],data_to_register_i[3],data_to_register_i[2],data_to_register_i[1],intermidate_partity_bits[2],data_to_register_i[0], intermidate_partity_bits[1], intermidate_partity_bits[0]};
     
     
     
