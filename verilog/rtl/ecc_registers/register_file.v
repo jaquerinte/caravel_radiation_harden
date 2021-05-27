@@ -30,6 +30,7 @@ module register_file #(
         input [WHISBONE_ADR - 1 : 0] whisbone_addr_i,
         input wbs_we_i,
         // end whishbone interface
+        input  operation_type_i,
         input  [WORD_SIZE - 1 : 0] data_to_register_i ,
         input  [REGDIRSIZE - 1 : 0] register_i ,
         input  wregister_i ,
@@ -56,6 +57,7 @@ module register_file #(
     inst_PCW(
         .data_to_register_i       (data_to_register_i ),
         .operate_i                (wregister_i ),
+        .operation_type_i         (operation_type_i),
         .data_to_register_o       (data_to_register_PCW_RD)
     );
 
@@ -74,6 +76,7 @@ module register_file #(
         .register_i                (register_i ),
         .wregister_i               (wregister_i ),
         .rregister_i               (rregister_i ),
+        .operation_type_i         (operation_type_i),
         .valid_i                   (valid_i),
         .wstrb_i                   (wstrb_i),
         .wbs_we_i                  (wbs_we_i),
@@ -92,6 +95,7 @@ module register_file #(
     inst_DV(
         .internal_data_i          (store_data_RD_DV),
         .operate_i                (rregister_i ),
+        .operation_type_i         (operation_type_i),
         .operation_result_o       (operation_result_DV_PMU),
         .store_data_o             (store_data_DV_DO),
         .valid_output_o           (valid_output_DV_PMU)

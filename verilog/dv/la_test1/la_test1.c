@@ -109,19 +109,19 @@ void main()
 	reg_la2_data = 0x00000003;
 	reg_la2_data = 0x00000000;
 	
-	reg_la0_data = 0x00000006;
+	reg_la0_data = 0x0000000A;
 	reg_la1_data = 0x00000001;
 
 	reg_la2_data = 0x00000001;
 	reg_la2_data = 0x00000000;
 
-	reg_la0_data = 0x0000000A;
+	reg_la0_data = 0x000000012;
 	reg_la1_data = 0x00000002;
 
 	reg_la2_data = 0x00000001;
 	reg_la2_data = 0x00000000;
 
-	reg_la0_data = 0x00000009;
+	reg_la0_data = 0x00000011;
 	reg_la1_data = 0x00000000;
 
 	
@@ -129,7 +129,7 @@ void main()
 	reg_la2_data = 0x00000000;
 
 
-	reg_la0_data = 0x00000005;
+	reg_la0_data = 0x00000009;
 	reg_la1_data = 0x00000000;
 	
 	reg_la2_data = 0x00000001;

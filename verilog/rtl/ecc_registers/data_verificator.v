@@ -15,6 +15,7 @@ module data_verificator #(
     (
         input  [WORD_SIZE + ECCBITS- 1 : 0] internal_data_i ,
         input  operate_i ,
+        input  operation_type_i,
         output reg [VERIFICATION_PINS - 1 : 0] operation_result_o ,
         output reg [WORD_SIZE - 1 : 0] store_data_o ,
         output reg valid_output_o 
@@ -98,28 +99,36 @@ reg [1:0] state_of_data;
     assign data_representation = {internal_data_i, 1'b0};
 
     always @(*) begin
-        if (operate_i == 1'b1) begin
-            if (parity_bits == 7'b0000000) begin
+        if (operate_i == 1'b1 ) begin
+            if (operation_type_i == 1'b0) begin
+                if (parity_bits == 7'b0000000) begin
                 state_of_data = 2'b00;
                 data_store = {data_representation[38],data_representation[37],data_representation[36],data_representation[35],data_representation[34],data_representation[33],data_representation[31],data_representation[30],data_representation[29],data_representation[28],data_representation[27],data_representation[26],data_representation[25],data_representation[24],data_representation[23],data_representation[22],data_representation[21],data_representation[20],data_representation[19],data_representation[18],data_representation[17],data_representation[15],data_representation[14],data_representation[13],data_representation[12],data_representation[11],data_representation[10],data_representation[9],data_representation[7],data_representation[6],data_representation[5], data_representation[3]};
                 valid_output = 1'b1;
-            end
-            else begin
-                if (parity_bits[6] == 1'b0) begin
-                    state_of_data = 2'b10;
-                    data_store = {data_representation[38],data_representation[37],data_representation[36],data_representation[35],data_representation[34],data_representation[33],data_representation[31],data_representation[30],data_representation[29],data_representation[28],data_representation[27],data_representation[26],data_representation[25],data_representation[24],data_representation[23],data_representation[22],data_representation[21],data_representation[20],data_representation[19],data_representation[18],data_representation[17],data_representation[15],data_representation[14],data_representation[13],data_representation[12],data_representation[11],data_representation[10],data_representation[9],data_representation[7],data_representation[6],data_representation[5], data_representation[3]};
-                    valid_output = 1'b1;
                 end
                 else begin
-                    state_of_data = 2'b01;
-                    correction_stage = data_representation;
-                    correction_stage[parity_bits[5:0]] = !data_representation[parity_bits[5:0]];
-                    data_store = {correction_stage[38],correction_stage[37],correction_stage[36],correction_stage[35],correction_stage[34],correction_stage[33],correction_stage[31],correction_stage[30],correction_stage[29],correction_stage[28],correction_stage[27],correction_stage[26],correction_stage[25],correction_stage[24],correction_stage[23],correction_stage[22],correction_stage[21],correction_stage[20],correction_stage[19],correction_stage[18],correction_stage[17],correction_stage[15],correction_stage[14],correction_stage[13],correction_stage[12],correction_stage[11],correction_stage[10],correction_stage[9],correction_stage[7],correction_stage[6],correction_stage[5], correction_stage[3]};
-                    //data_store = correction_stage ^ internal_data_i;
-                    valid_output = 1'b1;
-                    
+                    if (parity_bits[6] == 1'b0) begin
+                        state_of_data = 2'b10;
+                        data_store = {data_representation[38],data_representation[37],data_representation[36],data_representation[35],data_representation[34],data_representation[33],data_representation[31],data_representation[30],data_representation[29],data_representation[28],data_representation[27],data_representation[26],data_representation[25],data_representation[24],data_representation[23],data_representation[22],data_representation[21],data_representation[20],data_representation[19],data_representation[18],data_representation[17],data_representation[15],data_representation[14],data_representation[13],data_representation[12],data_representation[11],data_representation[10],data_representation[9],data_representation[7],data_representation[6],data_representation[5], data_representation[3]};
+                        valid_output = 1'b1;
+                    end
+                    else begin
+                        state_of_data = 2'b01;
+                        correction_stage = data_representation;
+                        correction_stage[parity_bits[5:0]] = !data_representation[parity_bits[5:0]];
+                        data_store = {correction_stage[38],correction_stage[37],correction_stage[36],correction_stage[35],correction_stage[34],correction_stage[33],correction_stage[31],correction_stage[30],correction_stage[29],correction_stage[28],correction_stage[27],correction_stage[26],correction_stage[25],correction_stage[24],correction_stage[23],correction_stage[22],correction_stage[21],correction_stage[20],correction_stage[19],correction_stage[18],correction_stage[17],correction_stage[15],correction_stage[14],correction_stage[13],correction_stage[12],correction_stage[11],correction_stage[10],correction_stage[9],correction_stage[7],correction_stage[6],correction_stage[5], correction_stage[3]};
+                        //data_store = correction_stage ^ internal_data_i;
+                        valid_output = 1'b1;
+                        
+                    end
                 end
             end
+            else begin
+                state_of_data = 2'b00;
+                valid_output = 1'b1;
+                data_store = internal_data_i[31:0];
+            end
+            
         end
         else begin
         data_store = {WORD_SIZE {1'b0}}; 

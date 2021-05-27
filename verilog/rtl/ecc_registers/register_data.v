@@ -11,6 +11,7 @@
 module register_data #(
         parameter integer WORD_SIZE = 32,
         parameter integer REGISTERS = 32,
+        parameter integer SEGMENTS = 8 ,
         parameter integer REGDIRSIZE = 5,
         parameter integer ECCBITS = 7,
         parameter integer WHISBONE_ADR = 32,
@@ -20,9 +21,11 @@ module register_data #(
     (
         input  clk_i,
         input  rst_i ,
-        input  [WORD_SIZE + ECCBITS - 1 : 0] data_to_register_i ,
+        input  [WORD_SIZE + ECCBITS - 1 : 0] data_to_register_i,
+        //input  [((REGISTERS/ SEGMENTS) * (WORD_SIZE + ECCBITS)) - 1 : 0] data_to_register_i, // 156 interface
         input  [REGDIRSIZE - 1 : 0] register_i ,
         input  [WHISBONE_ADR - 1 : 0] whisbone_addr_i,
+        input  operation_type_i,
         input  wregister_i ,
         input  rregister_i ,
         input  valid_i, 
@@ -30,6 +33,7 @@ module register_data #(
         input  [WORD_SIZE -1 : 0] wdata_i,
         input  wbs_we_i,
         output reg [WORD_SIZE + ECCBITS -1: 0] store_data_o ,
+        //output reg [((REGISTERS/ SEGMENTS) * (WORD_SIZE + ECCBITS)) - 1 : 0] store_data_o , // 156 interface
         output reg ready_o,
         output reg [WORD_SIZE - 1 : 0] rdata_o
     );
@@ -39,8 +43,7 @@ module register_data #(
 
 //***Dumped Internal logic***
     // register bank
-    reg [WORD_SIZE + ECCBITS -1:0] r[0:REGISTERS-1];
-    wire [ECCBITS - 1:0] parity_bits;
+    reg [((REGISTERS/ SEGMENTS) * (WORD_SIZE + ECCBITS)) - 1 : 0 ] r[0:SEGMENTS-1];
 
     //request
 
@@ -48,62 +51,70 @@ module register_data #(
         // calculate last parity bit
         if (rst_i) begin
 
-            r[0] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[1] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[2] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[3] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[4] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[5] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[6] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[7] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[8] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[9] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[10] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[11] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[12] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[13] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[14] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[15] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[16] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[17] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[18] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[19] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[20] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[21] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[22] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[23] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[24] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[25] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[26] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[27] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[28] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[29] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[30] = {WORD_SIZE + ECCBITS{1'b0}};
-            r[31] = {WORD_SIZE + ECCBITS{1'b0}};
+            r[0] = {((REGISTERS/ SEGMENTS) * (WORD_SIZE + ECCBITS)){1'b0}};
+            r[1] = {((REGISTERS/ SEGMENTS) * (WORD_SIZE + ECCBITS)){1'b0}};
+            r[2] = {((REGISTERS/ SEGMENTS) * (WORD_SIZE + ECCBITS)){1'b0}};
+            r[3] = {((REGISTERS/ SEGMENTS) * (WORD_SIZE + ECCBITS)){1'b0}};
+            r[4] = {((REGISTERS/ SEGMENTS) * (WORD_SIZE + ECCBITS)){1'b0}};
+            r[5] = {((REGISTERS/ SEGMENTS) * (WORD_SIZE + ECCBITS)){1'b0}};
+            r[6] = {((REGISTERS/ SEGMENTS) * (WORD_SIZE + ECCBITS)){1'b0}};
+            r[7] = {((REGISTERS/ SEGMENTS) * (WORD_SIZE + ECCBITS)){1'b0}};
             ready_o <= 1'b0;
-            store_data_o <= {WORD_SIZE + ECCBITS {1'b0}};
+            store_data_o <= {WORD_SIZE + ECCBITS{1'b0}};
         end
-        else if (rregister_i) begin
-            store_data_o <= r[register_i];
+        else if (rregister_i & ~operation_type_i) begin
+            case (register_i[1:0])
+                2'b00: begin
+                store_data_o <= r[register_i[REGDIRSIZE - 1: 2]][38:0];
+                end
+                2'b01: begin
+                store_data_o <= r[register_i[REGDIRSIZE - 1: 2]][77:39];
+                end
+                2'b10: begin
+                store_data_o <= r[register_i[REGDIRSIZE - 1: 2]][116:78];
+                end
+                2'b11: begin
+                store_data_o <= r[register_i[REGDIRSIZE - 1: 2]][155:117];
+                end
+            endcase
+            
         end
-        else if (wregister_i) begin
+        else if (rregister_i & operation_type_i) begin
+            store_data_o <= ~((r[register_i[REGDIRSIZE - 1: 2]][31:0] ~& r[register_i[REGDIRSIZE - 1: 2]][63:32]) & (r[register_i[REGDIRSIZE - 1: 2]][63:32] ~& r[register_i[REGDIRSIZE - 1: 2]][95:64]) & (r[register_i[REGDIRSIZE - 1: 2]][31:0] ~& r[register_i[REGDIRSIZE - 1: 2]][95:64]));
+        end
+        else if (wregister_i & ~operation_type_i) begin
             // Sore data
-            r[register_i] <= data_to_register_i;
-            store_data_o <= {WORD_SIZE + ECCBITS {1'b0}}; 
+            case (register_i[1:0])
+                2'b00: begin
+                r[register_i[REGDIRSIZE - 1: 2]][38:0] <= data_to_register_i;
+                end
+                2'b01: begin
+                r[register_i[REGDIRSIZE - 1: 2]][77:39] <= data_to_register_i;
+                end
+                2'b10: begin
+                r[register_i[REGDIRSIZE - 1: 2]][116:78] <= data_to_register_i;
+                end
+                2'b11: begin
+                r[register_i[REGDIRSIZE - 1: 2]][155:117] <= data_to_register_i;
+                end
+            endcase
+            store_data_o <= {WORD_SIZE + ECCBITS{1'b0}};
         end
-
-         if (valid_i) begin
+        else if (wregister_i & operation_type_i) begin
+            r[register_i[REGDIRSIZE - 1: 2]][95:0] <= {data_to_register_i[31:0],data_to_register_i[31:0],data_to_register_i[31:0]};
+        end
+        if (valid_i) begin
             case (whisbone_addr_i)
-                REGISTERDATA: begin
+                REGISTERDATA: begin // the test register is 30 now in order to acomodate testing of the ECC and triple redundacy
                     ready_o <= 1'b1;
                     if (wbs_we_i) begin
-                        if (wstrb_i[0]) r[31][7:0]   <= wdata_i[7:0];
-                        if (wstrb_i[1]) r[31][15:8]  <= wdata_i[15:8];
-                        if (wstrb_i[2]) r[31][23:16] <= wdata_i[23:16];
-                        if (wstrb_i[3]) r[31][31:24] <= wdata_i[31:24];
+                        if (wstrb_i[0]) r[7][85:78]   <= wdata_i[7:0];
+                        if (wstrb_i[1]) r[7][93:86]   <= wdata_i[15:8];
+                        if (wstrb_i[2]) r[7][101:94]  <= wdata_i[23:16];
+                        if (wstrb_i[3]) r[7][109:102] <= wdata_i[31:24];
                     end
                     else begin
-                        rdata_o <= {r[31][31:0]};
+                        rdata_o <= {r[7][148:117]};
                     end
                 end
                 ADDRBASE + 4: begin ready_o <= 1'b1; end

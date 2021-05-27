@@ -38,13 +38,13 @@ void clean_lines(){
 
 void add_value_to_register(uint32_t value, uint32_t selected_regsiter){
 
-	reg_la0_data = (selected_regsiter << 2| 2 & 0x3);
+	reg_la0_data = (selected_regsiter << 3| 2 & 0x7);
 	reg_la1_data = value;
 }
 
 void read_value_from_register(uint32_t selected_regsiter){
 
-	reg_la0_data = (selected_regsiter << 2| 1 & 0x3);
+	reg_la0_data = (selected_regsiter << 3| 1 & 0x7);
 
 }
 
@@ -145,7 +145,7 @@ void main()
 	reg_la2_data = 0x00000000;
 	// end clock
 
-    add_value_to_register(1, 31);
+    add_value_to_register(1, 30);
     clock();
     add_value_to_register(2, 0);
     clock();
@@ -164,7 +164,7 @@ void main()
     // re enable clock
     reg_la2_oenb = 0xFFFFFFFC;
 
-    read_value_from_register(31);
+    read_value_from_register(30);
     clock();
     read_value_from_register(1);
     clock();

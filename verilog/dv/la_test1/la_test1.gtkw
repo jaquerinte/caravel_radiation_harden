@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Thu May 20 07:21:04 2021
+[*] Thu May 27 07:11:43 2021
 [*]
 [dumpfile] "/home/shuttle/core_radiation_hard/verilog/dv/la_test1/la_test1.vcd"
-[dumpfile_mtime] "Thu May 20 07:12:28 2021"
-[dumpfile_size] 2289251237
+[dumpfile_mtime] "Thu May 27 06:51:39 2021"
+[dumpfile_size] 2290536904
 [savefile] "/home/shuttle/core_radiation_hard/verilog/dv/la_test1/la_test1.gtkw"
-[timestart] 1091000000
+[timestart] 378940000
 [size] 1848 1016
 [pos] -1 -1
-*-27.000000 1444962500 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-22.000000 387787500 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] la_test1_tb.
 [treeopen] la_test1_tb.uut.
 [treeopen] la_test1_tb.uut.mprj.
@@ -29,13 +29,14 @@ la_test1_tb.uut.mprj.mprj.register_file.rst_i
 @24
 [color] 4
 la_test1_tb.uut.mprj.mprj.register_file.data_to_register_i[31:0]
-[color] 2
-la_test1_tb.uut.mprj.mprj.register_file.register_i[2:0]
 @28
+la_test1_tb.uut.mprj.mprj.register_file.register_i[4:0]
 [color] 3
 la_test1_tb.uut.mprj.mprj.register_file.wregister_i
 [color] 3
 la_test1_tb.uut.mprj.mprj.register_file.rregister_i
+[color] 3
+la_test1_tb.uut.mprj.mprj.register_file.operation_type_i
 @24
 [color] 1
 la_test1_tb.uut.mprj.mprj.register_file.store_data_o[31:0]
@@ -45,12 +46,18 @@ la_test1_tb.uut.mprj.mprj.register_file.operation_result_o[1:0]
 @200
 -
 -DATA REGISTER
-@24
-[color] 2
-la_test1_tb.uut.mprj.mprj.register_file.inst_RD.register_i[2:0]
 @22
 [color] 1
 la_test1_tb.uut.mprj.mprj.register_file.inst_RD.data_to_register_i[38:0]
+@28
+la_test1_tb.uut.mprj.mprj.register_file.inst_RD.register_i[4:0]
+[color] 3
+la_test1_tb.uut.mprj.mprj.register_file.inst_RD.wregister_i
+[color] 3
+la_test1_tb.uut.mprj.mprj.register_file.inst_RD.rregister_i
+[color] 3
+la_test1_tb.uut.mprj.mprj.register_file.inst_RD.operation_type_i
+@22
 [color] 7
 la_test1_tb.uut.mprj.mprj.register_file.inst_RD.store_data_o[38:0]
 @200
@@ -145,6 +152,10 @@ la_test1_tb.uut.mprj.mprj.register_file.inst_DV.internal_data_i[38:0]
 la_test1_tb.uut.mprj.mprj.register_file.inst_DV.operate_i
 [color] 3
 la_test1_tb.uut.mprj.mprj.register_file.inst_DV.valid_output_o
+@29
+[color] 3
+la_test1_tb.uut.mprj.mprj.register_file.inst_DV.operation_type_i
+@28
 [color] 2
 la_test1_tb.uut.mprj.mprj.register_file.inst_DV.operation_result_o[1:0]
 @24
@@ -152,7 +163,7 @@ la_test1_tb.uut.mprj.mprj.register_file.inst_DV.store_data_o[31:0]
 @200
 -
 -IO DATA
-@800022
+@c00022
 la_test1_tb.mprj_io[37:0]
 @28
 (0)la_test1_tb.mprj_io[37:0]
@@ -171,9 +182,7 @@ la_test1_tb.mprj_io[37:0]
 (13)la_test1_tb.mprj_io[37:0]
 (14)la_test1_tb.mprj_io[37:0]
 (15)la_test1_tb.mprj_io[37:0]
-@29
 (16)la_test1_tb.mprj_io[37:0]
-@28
 (17)la_test1_tb.mprj_io[37:0]
 (18)la_test1_tb.mprj_io[37:0]
 (19)la_test1_tb.mprj_io[37:0]
@@ -195,7 +204,7 @@ la_test1_tb.mprj_io[37:0]
 (35)la_test1_tb.mprj_io[37:0]
 (36)la_test1_tb.mprj_io[37:0]
 (37)la_test1_tb.mprj_io[37:0]
-@1001200
+@1401200
 -group_end
 [pattern_trace] 1
 [pattern_trace] 0
