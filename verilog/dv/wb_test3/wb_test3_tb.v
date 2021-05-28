@@ -68,7 +68,7 @@ module wb_test3_tb;
 		wait(mprj_io[25:20] == 6'd0);
 		$display("WB Test 3 started");
 		wait(mprj_io[25:20] == 6'd2);
-		wait(mprj_io[37:36] == 2'b00);
+		wait(mprj_io[37:36] == 2'b01);
 		
 		$display("WB Test 3 Finish correctly");
 		//wait(checkbits == 16'h0002);

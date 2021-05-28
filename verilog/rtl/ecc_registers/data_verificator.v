@@ -13,7 +13,18 @@ module data_verificator #(
         parameter integer VERIFICATION_PINS = 2
     )
     (
+        `ifdef USE_POWER_PINS
+        inout vdda1,	// User area 1 3.3V supply
+        inout vdda2,	// User area 2 3.3V supply
+        inout vssa1,	// User area 1 analog ground
+        inout vssa2,	// User area 2 analog ground
+        inout vccd1,	// User area 1 1.8V supply
+        inout vccd2,	// User area 2 1.8v supply
+        inout vssd1,	// User area 1 digital ground
+        inout vssd2,	// User area 2 digital ground
+        `endif
         input  [WORD_SIZE + ECCBITS- 1 : 0] internal_data_i ,
+        input  [VERIFICATION_PINS - 1 : 0] triple_redundat_validation_i,
         input  operate_i ,
         input  operation_type_i,
         output reg [VERIFICATION_PINS - 1 : 0] operation_result_o ,
@@ -124,7 +135,7 @@ reg [1:0] state_of_data;
                 end
             end
             else begin
-                state_of_data = 2'b00;
+                state_of_data = triple_redundat_validation_i;
                 valid_output = 1'b1;
                 data_store = internal_data_i[31:0];
             end
