@@ -126,6 +126,16 @@ module user_proj #(
         .ECCBITS (ECCBITS),
         .COUNTERSIZE (COUNTERSIZE)
     ) register_file(
+        `ifdef USE_POWER_PINS
+        .vdda1(vdda1),	// User area 1 3.3V power
+        .vdda2(vdda2),	// User area 2 3.3V power
+        .vssa1(vssa1),	// User area 1 analog ground
+        .vssa2(vssa2),	// User area 2 analog ground
+        .vccd1(vccd1),	// User area 1 1.8V power
+        .vccd2(vccd2),	// User area 2 1.8V power
+        .vssd1(vssd1),	// User area 1 digital ground
+        .vssd2(vssd2),	// User area 2 digital ground
+        `endif
         .clk_i(clk),
         .rst_i(rst),
         .valid_i(valid),
