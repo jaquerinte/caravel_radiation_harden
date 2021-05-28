@@ -10,7 +10,10 @@
 
 ![](readme_data/space_shuttle_patch_crop.png)
 
-## **Main Version of the chip: 1.2V**
+### **Main Version of the chip: 1.5V**  
+
+<br/>
+
 ## **Description**
 
 The main goal of this project is to design open source radiation harden techniques. For now the space industry is a very close source and restricted IP industry.  But from ESA and his partners there is increasing interest in open source software and hardware for space use. So the main goal of the project is to implement some radiation harden features and test them under radiation to see how this techniques behave. Due to the nature of this project that is using a node that is close to the nodes use in this industry we will be easy to compare to current solutions.
@@ -110,6 +113,34 @@ void main()
 ## **ECC Implementation**
 For the   of the code we use [Hamming code](https://en.wikipedia.org/wiki/Hamming_code#:~:text=In%20computer%20science%20and%20telecommunication,without%20detection%20of%20uncorrected%20errors.) for the implementation or the parity bits and correction.
 In this particularly case is implemented with 6 bits inside of the register (positions 1,2,4,8,16,32) and a extra bit at the last position of the 2 bit error detection.
+
+## **Triple Redundancy Implementation**
+The triple redundancy is implemented using the same registers that are been use for the ECC memory. The main issue of using this is the reduction in the space available for registers. But triple redundancy and standard ECC register can be use at the same time. Maintaining the consistency and witch registers are use and is witch mode each register is bee use is a job of the user. 
+
+In the chip can be at maximum of 8 triple redundancy registers and 8 ECC registers can be use at the same time. 
+
+The registers that can be use for triple redundancy are:
+- 00
+- 04
+- 08
+- 12
+- 16
+- 20
+- 24
+- 28
+  
+When one of this triple redundancy only a set of registers for ECC can be use. The registers that can be use when one of triple redundancy is use is:
+- 00 ⟶ ECC register available 3
+- 04 ⟶ ECC register available 7
+- 08 ⟶ ECC register available 11
+- 12 ⟶ ECC register available 15
+- 16 ⟶ ECC register available 19
+- 20 ⟶ ECC register available 23
+- 24 ⟶ ECC register available 27
+- 28 ⟶ ECC register available 31
+
+
+
 ## **Block Description**
 The main code part is in the ecc_registers folder inside of the rtl folder. The user_proj.v contains only the connections to connect the project wrapper with the register file. The module works in a black box manner, the values are inserted to the module and you can ask for a value inside of the memory and the output is the value requested with a status signal that tells if the value is correct without modifications, the value has been corrected or if the value data is invalid. Is important to notice that if more that two bits are flip in the register value the system can not reliable determine if the value is incorrect.
 
@@ -129,6 +160,8 @@ The module is implemented with 32 bit word size and 32 registers. The counters a
   - wregister_i: Signal to indicate that the operation that you want is to write the input data to a register.
   
   - rregister_i: Signal to indicate that the operation that you want is to read from the register file.
+  
+  - operation_type_i: Signal that indicate that the operation will be using the triple redundancy blocks. This is use in conjunction with the  wregister_i and rregister_i for writing and reading. 
 - **Output Ports**
   - store_data_o [31:0]: The 32 bit value that was store in the register file
 
@@ -163,8 +196,9 @@ Caravel offers multiple way to interact with the user project inside of it. This
 - Input probes: 
   - la_data_in [0]       ⟶ rregister_i.
   - la_data_in [1]       ⟶ wregister_i.
-  - la_data_in [6:2]     ⟶ register_i [4:0].
-  - la_data_in [31:7]    ⟶ Not connected.
+  - la_data_in [2]       ⟶ operation_type_i .
+  - la_data_in [7:3]     ⟶ register_i [4:0].
+  - la_data_in [31:8]    ⟶ Not connected.
   - la_data_in [63:32]   ⟶ data_to_register_i [31:0].
   - la_data_in [64]      ⟶ clk_i.
   - la_data_in [65]      ⟶ rst_i.
@@ -330,6 +364,12 @@ For this project there is a set of test in order to verify the functionality des
 
 - la_test2: This test, writes and reads all of the 32 registers of chip.
 
+- la_test3: This test, writes and reads from one of the triple redundancy registers.
+
+- la_test4: This test, writes in a triple redundant register and modify two of the copies of the data stored to test that the error state is detected.
+
 - wb_test1: This test uses the wishbone interface to modify one bit of an internal register in order to test the ECC functionality.
 
 - wb_test2: This test uses the wishbone interface to modify one bit of an internal register and also makes some reads in oder to check the performance counters.
+
+- wb_test3: This test uses the wishbone interface to modify one value  of an internal triple redundant register and also makes a red to check that the output value is correct and the corrected stage is detected.
