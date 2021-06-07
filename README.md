@@ -10,7 +10,7 @@
 
 ![](readme_data/space_shuttle_patch_crop.png)
 
-### **Main Version of the chip: 1.5V**  
+### **Main Version of the chip: 2.0V**  
 
 <br/>
 
@@ -18,7 +18,15 @@
 
 The main goal of this project is to design open source radiation harden techniques. For now the space industry is a very close source and restricted IP industry.  But from ESA and his partners there is increasing interest in open source software and hardware for space use. So the main goal of the project is to implement some radiation harden features and test them under radiation to see how this techniques behave. Due to the nature of this project that is using a node that is close to the nodes use in this industry we will be easy to compare to current solutions.
 
-One of the first things implemented is a 32 bit register file that has ECC implementation. In this case is implemented 1 bit correction and 2 bit detention.
+In detail this project aims to test different techniques for error detection and correction in registers. In this case is implemented a 32 bit register file that we be use at the same time (with some limitations) with the different techniques selected.
+This techniques are:
+- ECC: ECC with 1 bit correction and 2 bit correction
+  
+- Triple Redundancy: The input value is triplicated in the register file
+  
+- Shadow Register: The input value has a copy in the register file
+  
+- ECC Shadow Register: The input value has a copy in the register file with ECC protection of 1 bit correction and 2 bit correction.
 
 ## **How To Use The Chip**
 This is a full example of how to use the chip in the context of caravel. For this example we will write a value to the register 1 and then we will read that value from the register file. This is also the first test of the chip. 
@@ -139,6 +147,15 @@ When one of this triple redundancy only a set of registers for ECC can be use. T
 - 24 ⟶ ECC register available 27
 - 28 ⟶ ECC register available 31
 
+## **Shadow Register Implementation**
+The shadow register is implemented by only using the first 4 bits of register address for accessing the first 16 registers for store operations. The last bit of the address is use internally to store the value in a second register. So for example you store a value in the register 0 the shadow copy will be stored in the register 16. For this method only error detection is possible.
+
+## **ECC Shadow Register Implementation**
+The ECC shadow register is implemented in a similar way of the shadow register but the values are store with the parity bits. In this case first the value is compare with the shadow register and second the not shadowed register is send to the parity verification to check the ECC value is correct, the output will be if the values has been corrected and/or was a mismatch between the values.
+
+
+## **No Protection Implementation**
+For this mode the data value is store with out any protection in the register file. 
 
 
 ## **Block Description**
@@ -161,15 +178,21 @@ The module is implemented with 32 bit word size and 32 registers. The counters a
   
   - rregister_i: Signal to indicate that the operation that you want is to read from the register file.
   
-  - operation_type_i: Signal that indicate that the operation will be using the triple redundancy blocks. This is use in conjunction with the  wregister_i and rregister_i for writing and reading. 
+  - operation_type_i [3:0]:This is a three bit signal that indicates what type of operation will apply to the data. This is use in conjunction with the  wregister_i and rregister_i for writing and reading. The possible values are:
+    - **000**: Indicates that the data will be stored using ECC.
+    - **001**: Indicates that the data will be stored using triple redundancy.
+    - **010**: Indicates that the data will be stored using ECC shadow registers.
+    - **011**: Indicates that the data will be stored using shadow registers.
+    - **100**: Indicates that the data will be stored without using any protection method.
 - **Output Ports**
   - store_data_o [31:0]: The 32 bit value that was store in the register file
 
-  - operation:result_o [1:0]. This is a two bit output that indicates the sate of the data.  
+  - operation_result_o [1:0]. This is a two bit output that indicates the sate of the data.  
     - **00**: Indicates that the data was in a correct state.
     - **01**: Indicates that the data output is correct but was a bit flip.
     - **10**: Indicates that the data is incorrect and was two bit flip.
     - **11**: Not defined state
+  - operational_o. Signal that indicates if the system is ready to accept petitions  for reading or writing. 
 
 Also some extra ports can be use in the case to add connection to a [wishbone bus](https://en.wikipedia.org/wiki/Wishbone_(computer_bus)). For the current version the wishbone is only connected to the 32 bit counter that counts the number of 1 bit flip that have happened.
 ## Module Extra Ports:
@@ -360,13 +383,27 @@ void main()
 
 For this project there is a set of test in order to verify the functionality described. The test are the following.
 
-- la_test1: This test is the basic test, write a value to a register and then reads that value from the memory.
+- la_test1: This test is the basic test, write a value with ECC to a register and then reads that value from the memory.
 
-- la_test2: This test, writes and reads all of the 32 registers of chip.
+- la_test2: This test, writes and reads all of the 32 registers of chip using ECC.
 
 - la_test3: This test, writes and reads from one of the triple redundancy registers.
 
 - la_test4: This test, writes in a triple redundant register and modify two of the copies of the data stored to test that the error state is detected.
+
+- la_test5: This test writes and reads from one of the shadow registers.
+
+- la_test6: This test, writes and reads all of the 16 registers using shadow registers.
+
+- la_test7: This test, writes in a register using a shadow register and modify the shadow register to verify that the error is detected.
+
+- la_test8: This test writes and reads from one of the ECC shadow registers.
+
+- la_test9: This test, writes and reads all of the 16 registers using ECC shadow registers.
+
+- la_test10: This test, writes in a register using a ECC shadow register and modify the shadow register to verify that the error is detected.
+
+- la_test11: This test writes and reads from one register without using  any protection.
 
 - wb_test1: This test uses the wishbone interface to modify one bit of an internal register in order to test the ECC functionality.
 
