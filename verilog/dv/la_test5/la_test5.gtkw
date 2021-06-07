@@ -1,0 +1,37 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Fri Jun  4 09:25:01 2021
+[*]
+[dumpfile] "(null)"
+[savefile] "/home/shuttle/core_radiation_hard/verilog/dv/la_test5/la_test5.gtkw"
+[timestart] 358000000
+[size] 1848 1016
+[pos] -1 -1
+*-25.000000 574012500 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] la_test5_tb.
+[treeopen] la_test5_tb.uut.
+[treeopen] la_test5_tb.uut.mprj.
+[treeopen] la_test5_tb.uut.mprj.mprj.
+[sst_width] 233
+[signals_width] 222
+[sst_expanded] 1
+[sst_vpaned_height] 289
+@200
+-TOP MODULE
+@28
+la_test5_tb.uut.mprj.mprj.register_file.clk_i
+la_test5_tb.uut.mprj.mprj.register_file.rst_i
+@24
+la_test5_tb.uut.mprj.mprj.register_file.data_to_register_i[31:0]
+@22
+la_test5_tb.uut.mprj.mprj.register_file.register_i[4:0]
+@28
+la_test5_tb.uut.mprj.mprj.register_file.operation_type_i[1:0]
+la_test5_tb.uut.mprj.mprj.register_file.rregister_i
+la_test5_tb.uut.mprj.mprj.register_file.wregister_i
+@25
+la_test5_tb.uut.mprj.mprj.register_file.store_data_o[31:0]
+@28
+la_test5_tb.uut.mprj.mprj.register_file.operation_result_o[1:0]
+[pattern_trace] 1
+[pattern_trace] 0

@@ -35,7 +35,7 @@ set ::env(CLOCK_PERIOD) "10"
 
 
 set ::env(FP_SIZING) absolute
-set ::env(DIE_AREA) "0 0 900 600"
+set ::env(DIE_AREA) "0 0 1000 1000"
 set ::env(DESIGN_IS_CORE) 0
 
 set ::env(VDD_NETS) [list {vccd1} {vccd2} {vdda1} {vdda2}]
@@ -51,7 +51,7 @@ set ::env(PL_TARGET_DENSITY) 0.2
 # If you're going to use multiple power domains, then keep this disabled.
 set ::env(RUN_CVC) 0
 
-set ::env(ROUTING_OPT_ITERS) 70
-set ::env(ROUTING_CORES) 8
+#set ::env(ROUTING_OPT_ITERS) 70
+#set ::env(ROUTING_CORES) 8
 #set ::env(DETAILED_ROUTER) drcu
 

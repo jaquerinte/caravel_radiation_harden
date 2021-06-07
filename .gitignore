@@ -3,3 +3,4 @@ checks/
 *.hex
 *.vvp
 *.elf
+*.log

@@ -80,7 +80,7 @@ module wb_test1_tb;
 		RSTB <= 1'b0;
 		CSB  <= 1'b1;		// Force CSB high
 		#2000;
-		RSTB <= 1'b1;	    	// Release reset
+		RSTB <= 1'b1;	   	// Release reset
 		#170000;
 		CSB = 1'b0;		// CSB can be released
 	end

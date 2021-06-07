@@ -90,6 +90,7 @@ module user_proj #(
     wire [WORD_SIZE-1:0] rdata; 
     wire [WORD_SIZE-1:0] wdata;
     wire [WORD_SIZE-1:0] output_data;
+    wire operational;
     wire [VERIFICATION_PINS-1:0] output_verification;
 
     wire valid;
@@ -115,7 +116,7 @@ module user_proj #(
     assign rst = (~la_oenb[65]) ? la_data_in[65]: wb_rst_i;
     // Assuming LA probes [63:32] are for controlling the input data
     //assign la_write = ~la_oenb[63:32] & ~{WORD_SIZE{valid}};
-    assign la_data_out = {output_data, output_verification,{(127-WORD_SIZE+VERIFICATION_PINS){1'b0}}};
+    assign la_data_out = {output_data, output_verification,operational,{(127-WORD_SIZE+VERIFICATION_PINS+1){1'b0}}};
 
     register_file #(
         .WORD_SIZE (WORD_SIZE),
@@ -142,13 +143,14 @@ module user_proj #(
         .wstrb_i(wstrb),
         .wdata_i(wdata),
         .wbs_we_i(wbs_we_i),
-        .operation_type_i (la_data_in[2]),
+        .operation_type_i (la_data_in[4:2]),
         .data_to_register_i(la_data_in[63:32]),
-        .register_i(la_data_in[7:3]),
+        .register_i(la_data_in[9:5]),
         .wregister_i(la_data_in[1]),
         .rregister_i(la_data_in[0]),
-        .whisbone_addr_i (wbs_adr_i),
+        .wbs_adr_i (wbs_adr_i),
         .store_data_o(output_data),
+        .operational_o(operational),
         .operation_result_o(output_verification),
         .ready_o(wbs_ack_o),
         .rdata_o(rdata)
