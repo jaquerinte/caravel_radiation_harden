@@ -39,13 +39,13 @@ void clock(){
 
 void add_value_to_register(uint32_t value, uint32_t selected_register){
 
-	reg_la0_data = (selected_register << 3| 2 & 0x7);
+	reg_la0_data = (selected_register << 5| 2 & 0x1F);
 	reg_la1_data = value;
 }
 
 void read_value_from_register(uint32_t selected_register){
 
-	reg_la0_data = (selected_register << 3| 1 & 0x7);
+	reg_la0_data = (selected_register << 5| 1 & 0x1F);
 
 }
 
@@ -72,7 +72,13 @@ void main()
 	// logic analyzer probes.
 	// I/O 6 is configured for the UART Tx line
 
-        reg_mprj_io_31 = GPIO_MODE_USER_STD_OUTPUT;
+		reg_mprj_io_37 = GPIO_MODE_USER_STD_OUTPUT;
+		reg_mprj_io_36 = GPIO_MODE_USER_STD_OUTPUT;
+		reg_mprj_io_35 = GPIO_MODE_USER_STD_OUTPUT;
+		reg_mprj_io_34 = GPIO_MODE_USER_STD_OUTPUT;
+		reg_mprj_io_33 = GPIO_MODE_USER_STD_OUTPUT;
+		reg_mprj_io_32 = GPIO_MODE_USER_STD_OUTPUT;
+		reg_mprj_io_31 = GPIO_MODE_USER_STD_OUTPUT;
         reg_mprj_io_30 = GPIO_MODE_USER_STD_OUTPUT;
         reg_mprj_io_29 = GPIO_MODE_USER_STD_OUTPUT;
         reg_mprj_io_28 = GPIO_MODE_USER_STD_OUTPUT;

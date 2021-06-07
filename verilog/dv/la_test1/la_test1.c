@@ -29,6 +29,25 @@
 		- Outputs message to the UART when the test concludes successfuly
 */
 int clk = 0;
+
+void clock(){
+	// clock
+	reg_la2_data = 0x00000001;
+	reg_la2_data = 0x00000000;
+	// end clock
+}
+
+void add_value_to_register(uint32_t value, uint32_t selected_register){
+
+	reg_la0_data = (selected_register << 5| 2 & 0x1F);
+	reg_la1_data = value;
+}
+
+void read_value_from_register(uint32_t selected_register){
+
+	reg_la0_data = (selected_register << 5| 1 & 0x1F);
+
+}
 void main()
 {
 
@@ -109,31 +128,14 @@ void main()
 	reg_la2_data = 0x00000003;
 	reg_la2_data = 0x00000000;
 	
-	reg_la0_data = 0x0000000A;
-	reg_la1_data = 0x00000001;
-
-	reg_la2_data = 0x00000001;
-	reg_la2_data = 0x00000000;
-
-	reg_la0_data = 0x000000012;
-	reg_la1_data = 0x00000002;
-
-	reg_la2_data = 0x00000001;
-	reg_la2_data = 0x00000000;
-
-	reg_la0_data = 0x00000011;
-	reg_la1_data = 0x00000000;
-
-	
-	reg_la2_data = 0x00000001;
-	reg_la2_data = 0x00000000;
-
-
-	reg_la0_data = 0x00000009;
-	reg_la1_data = 0x00000000;
-	
-	reg_la2_data = 0x00000001;
-	reg_la2_data = 0x00000000;
+	add_value_to_register(1, 1);
+	clock();
+	add_value_to_register(2, 2);
+	clock();
+	read_value_from_register(2);
+	clock();
+	read_value_from_register(1);
+	clock();
 
 	reg_mprj_datal = 0xAB410000;
 	print("\n");

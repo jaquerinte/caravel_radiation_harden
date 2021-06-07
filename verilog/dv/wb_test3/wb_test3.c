@@ -38,25 +38,25 @@ void clean_lines(){
 
 void add_value_to_triplet_register(uint32_t value, uint32_t selected_register){
 
-	reg_la0_data = (selected_register << 3| 6 & 0x7);
+	reg_la0_data = (selected_register << 5| 6 & 0x1F);
 	reg_la1_data = value;
 }
 
 void read_value_from_triplet_register(uint32_t selected_register){
 
-	reg_la0_data = (selected_register << 3| 5 & 0x7);
+	reg_la0_data = (selected_register << 5| 5 & 0x1F);
 
 }
 
 void add_value_to_register(uint32_t value, uint32_t selected_register){
 
-	reg_la0_data = (selected_register << 2| 2 & 0x3);
+	reg_la0_data = (selected_register << 5| 2 & 0x1F);
 	reg_la1_data = value;
 }
 
 void read_value_from_register(uint32_t selected_register){
 
-	reg_la0_data = (selected_register << 2| 1 & 0x3);
+	reg_la0_data = (selected_register << 5| 1 & 0x1F);
 
 }
 

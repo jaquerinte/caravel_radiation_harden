@@ -32,7 +32,7 @@ module state_counters #(
         input  valid_i, 
         input  [3 : 0] wstrb_i,
         input  [WORD_SIZE -1 : 0] wdata_i,
-        input  [WHISBONE_ADR - 1 : 0] whisbone_addr_i,
+        input  [WHISBONE_ADR - 1 : 0] wbs_adr_i,
         input  [VERIFICATION_PINS - 1 : 0] operation_result_i ,
         input  valid_output_i,
         input  wbs_we_i,
@@ -70,7 +70,7 @@ module state_counters #(
                 end
             end
             if (valid_i) begin
-                case (whisbone_addr_i)
+                case (wbs_adr_i)
                 COUNTERDATA : begin
                         ready_o <= 1'b1;
                         if (wbs_we_i) begin

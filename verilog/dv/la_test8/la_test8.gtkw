@@ -1,0 +1,38 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Mon Jun  7 12:10:15 2021
+[*]
+[dumpfile] "/home/shuttle/core_radiation_hard/verilog/dv/la_test8/la_test8.vcd"
+[dumpfile_mtime] "Mon Jun  7 11:07:08 2021"
+[dumpfile_size] 292468084
+[savefile] "/home/shuttle/core_radiation_hard/verilog/dv/la_test8/la_test8.gtkw"
+[timestart] 393900000
+[size] 1848 1016
+[pos] -89 -89
+*-25.000000 476037500 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] la_test8_tb.
+[treeopen] la_test8_tb.uut.
+[treeopen] la_test8_tb.uut.mprj.
+[treeopen] la_test8_tb.uut.mprj.mprj.
+[sst_width] 233
+[signals_width] 222
+[sst_expanded] 1
+[sst_vpaned_height] 289
+@28
+la_test8_tb.uut.mprj.mprj.register_file.clk_i
+la_test8_tb.uut.mprj.mprj.register_file.rst_i
+@25
+la_test8_tb.uut.mprj.mprj.register_file.data_to_register_i[31:0]
+@22
+la_test8_tb.uut.mprj.mprj.register_file.register_i[4:0]
+@28
+la_test8_tb.uut.mprj.mprj.register_file.operation_type_i[2:0]
+la_test8_tb.uut.mprj.mprj.register_file.rregister_i
+la_test8_tb.uut.mprj.mprj.register_file.wregister_i
+@24
+la_test8_tb.uut.mprj.mprj.register_file.store_data_o[31:0]
+@28
+la_test8_tb.uut.mprj.mprj.register_file.operation_result_o[1:0]
+la_test8_tb.uut.mprj.mprj.register_file.operational_o
+[pattern_trace] 1
+[pattern_trace] 0
