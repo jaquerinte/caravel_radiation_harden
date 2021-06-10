@@ -143,7 +143,7 @@ void main()
 	reg_la2_data = 0x00000000;
 	// end clock
 
-    add_value_to_register(1, 30);
+    add_value_to_register(1, 0);
     clock();
     clean_lines();
     clock();
@@ -157,7 +157,7 @@ void main()
     clock();
     reg_la2_oenb = 0xFFFFFFFC;
 
-    read_value_from_register(30);
+    read_value_from_register(0);
     clock();
     
     reg_mprj_datal = 0xAB410000;

@@ -59,8 +59,12 @@ module register_file #(
     wire [WORD_SIZE + ECCBITS - 1 : 0] store_data_RD_DV; // wiring between store_data_o of module RD and internal_data_i of module DV
     wire [VERIFICATION_PINS - 1 : 0] redunancy_output_DV_PMU; 
     wire [VERIFICATION_PINS - 1 : 0] operation_result_DV_PMU; // wiring between operation_result_o of module DV and operation_result_i of module PMU
-    wire valid_output_DV_PMU; // wiring between valid_output_o of module DV and valid_output_i of module PMU
+    wire ready_pmu; // wire to connect to the PMU
+    wire ready_pmu_backup; // wire to connect to the PMU
+    wire ready_register;// wire to connecto to the register data
     wire [WORD_SIZE - 1 : 0] store_data_DV_DO; // wiring between store_data_o of module DV and store_data_i of module DO
+
+    assign ready_o = ready_pmu | ready_register | ready_pmu_backup;
 
     parity_calculator #(
         .WORD_SIZE (WORD_SIZE),
@@ -108,7 +112,7 @@ module register_file #(
         .register_i                (register_i ),
         .wregister_i               (wregister_i ),
         .rregister_i               (rregister_i ),
-        .operation_type_i         (operation_type_i),
+        .operation_type_i          (operation_type_i),
         .valid_i                   (valid_i),
         .wstrb_i                   (wstrb_i),
         .wbs_we_i                  (wbs_we_i),
@@ -116,7 +120,7 @@ module register_file #(
         .wbs_adr_i                 (wbs_adr_i),
         .store_data_o              (store_data_RD_DV),
         .operational_o             (operational_o),
-        .ready_o                   (ready_o),
+        .ready_o                   (ready_register),
         .rdata_o                   (rdata_o),
         .redundat_validation_o (redunancy_output_DV_PMU)
     );
@@ -142,8 +146,7 @@ module register_file #(
         .redundat_validation_i (redunancy_output_DV_PMU),
         .operation_type_i         (operation_type_i),
         .operation_result_o       (operation_result_DV_PMU),
-        .store_data_o             (store_data_DV_DO),
-        .valid_output_o           (valid_output_DV_PMU)
+        .store_data_o             (store_data_DV_DO)
     );
 
     decoder_output #(
@@ -170,7 +173,9 @@ module register_file #(
         .WORD_SIZE (WORD_SIZE),
         .VERIFICATION_PINS (VERIFICATION_PINS),
         .WHISBONE_ADR (WHISBONE_ADR),
-        .COUNTERSIZE (COUNTERSIZE)
+        .REGDIRSIZE (REGDIRSIZE),
+        .COUNTERSIZE (COUNTERSIZE),
+        .REGISTERS (REGISTERS)
     )
     inst_PMU(
         `ifdef USE_POWER_PINS
@@ -185,14 +190,47 @@ module register_file #(
         `endif
         .clk_i                    (clk_i ),
         .rst_i                    (rst_i ),
+        .register_i               (register_i ),
         .valid_i                  (valid_i),
         .wstrb_i                  (wstrb_i),
         .wdata_i                  (wdata_i),
         .wbs_we_i                 (wbs_we_i),
-        .wbs_adr_i          (wbs_adr_i),
+        .wbs_adr_i                (wbs_adr_i),
         .operation_result_i       (operation_result_DV_PMU),
-        .valid_output_i           (valid_output_DV_PMU),
-        .ready_o                  (ready_o),
+        .ready_o                  (ready_pmu),
+        .rdata_o                  (rdata_o)
+    );
+
+    state_counters #(
+        .WORD_SIZE (WORD_SIZE),
+        .VERIFICATION_PINS (VERIFICATION_PINS),
+        .WHISBONE_ADR (WHISBONE_ADR),
+        .COUNTERSIZE (COUNTERSIZE),
+        .REGDIRSIZE (REGDIRSIZE),
+        .REGISTERS (REGISTERS),
+        .ADDRBASE (16'h5000)
+    )
+    inst_PMUBACKUP(
+        `ifdef USE_POWER_PINS
+        .vdda1(vdda1),	// User area 1 3.3V power
+        .vdda2(vdda2),	// User area 2 3.3V power
+        .vssa1(vssa1),	// User area 1 analog ground
+        .vssa2(vssa2),	// User area 2 analog ground
+        .vccd1(vccd1),	// User area 1 1.8V power
+        .vccd2(vccd2),	// User area 2 1.8V power
+        .vssd1(vssd1),	// User area 1 digital ground
+        .vssd2(vssd2),	// User area 2 digital ground
+        `endif
+        .clk_i                    (clk_i ),
+        .rst_i                    (rst_i ),
+        .register_i               (register_i ),
+        .valid_i                  (valid_i),
+        .wstrb_i                  (wstrb_i),
+        .wdata_i                  (wdata_i),
+        .wbs_we_i                 (wbs_we_i),
+        .wbs_adr_i                (wbs_adr_i),
+        .operation_result_i       (operation_result_DV_PMU),
+        .ready_o                  (ready_pmu_backup),
         .rdata_o                  (rdata_o)
     );
 

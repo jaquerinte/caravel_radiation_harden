@@ -48,9 +48,9 @@ void read_value_from_register(uint32_t selected_regsiter){
 
 }
 
-#define reg_wb_register        (*(volatile uint32_t*)0x30000000)
-#define reg_wb_reads           (*(volatile uint32_t*)0x30000004)
-#define reg_wb_ecc_corrected   (*(volatile uint32_t*)0x30000008)
+#define reg_wb_register        (*(volatile uint32_t*)0x30000010)
+#define reg_wb_reads           (*(volatile uint32_t*)0x41000000)
+#define reg_wb_ecc_corrected   (*(volatile uint32_t*)0x41000008)
 
 void main()
 {
@@ -145,7 +145,7 @@ void main()
 	reg_la2_data = 0x00000000;
 	// end clock
 
-    add_value_to_register(1, 30);
+    add_value_to_register(1, 4);
     clock();
     add_value_to_register(2, 0);
     clock();
@@ -164,7 +164,7 @@ void main()
     // re enable clock
     reg_la2_oenb = 0xFFFFFFFC;
 
-    read_value_from_register(30);
+    read_value_from_register(4);
     clock();
     read_value_from_register(1);
     clock();

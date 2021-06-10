@@ -280,8 +280,67 @@ module register_data #(
             end
 
         end
-        if (valid_i) begin
-            case (wbs_adr_i)
+        if (valid_i && wbs_adr_i[31:16] == 16'h3000) begin
+            // big 32 register switch case for the whisbone acces to the registers
+            case (wbs_adr_i[4:0]) 
+                4'h0: begin
+                    ready_o <= 1'b1;
+                    if (wbs_we_i) begin
+                        if (wstrb_i[0]) r[wbs_adr_i[9:5]][7:0]     <= wdata_i[7:0];
+                        if (wstrb_i[1]) r[wbs_adr_i[9:5]][15:8]    <= wdata_i[15:8];
+                        if (wstrb_i[2]) r[wbs_adr_i[9:5]][23:16]   <= wdata_i[23:16];
+                        if (wstrb_i[3]) r[wbs_adr_i[9:5]][31:24]   <= wdata_i[31:24];
+                    end
+                    else begin
+                        rdata_o <= {r[wbs_adr_i[9:5]][31:0]};
+                    end
+
+                end
+                4'h4: begin
+                    ready_o <= 1'b1;
+                    if (wbs_we_i) begin
+                        if (wstrb_i[0]) r[wbs_adr_i[9:5]][46:39]   <= wdata_i[7:0];
+                        if (wstrb_i[1]) r[wbs_adr_i[9:5]][54:47]   <= wdata_i[15:8];
+                        if (wstrb_i[2]) r[wbs_adr_i[9:5]][62:55]   <= wdata_i[23:16];
+                        if (wstrb_i[3]) r[wbs_adr_i[9:5]][70:63]   <= wdata_i[31:24];
+                    end
+                    else begin
+                        rdata_o <= {r[wbs_adr_i[9:5]][70:39]};
+                    end
+                end
+                4'h8: begin
+                    ready_o <= 1'b1;
+                    if (wbs_we_i) begin
+                        if (wstrb_i[0]) r[wbs_adr_i[9:5]][85:78]   <= wdata_i[7:0];
+                        if (wstrb_i[1]) r[wbs_adr_i[9:5]][93:86]   <= wdata_i[15:8];
+                        if (wstrb_i[2]) r[wbs_adr_i[9:5]][101:94]  <= wdata_i[23:16];
+                        if (wstrb_i[3]) r[wbs_adr_i[9:5]][109:102] <= wdata_i[31:24];
+                    end
+                    else begin
+                        rdata_o <= {r[wbs_adr_i[9:5]][109:78]};
+                    end
+                end
+                4'hC: begin
+                    ready_o <= 1'b1;
+                    if (wbs_we_i) begin
+                        if (wstrb_i[0]) r[wbs_adr_i[9:5]][124:117]  <= wdata_i[7:0];
+                        if (wstrb_i[1]) r[wbs_adr_i[9:5]][135:125]  <= wdata_i[15:8];
+                        if (wstrb_i[2]) r[wbs_adr_i[9:5]][140:136]  <= wdata_i[23:16];
+                        if (wstrb_i[3]) r[wbs_adr_i[9:5]][148:141]  <= wdata_i[31:24];
+                    end
+                    else begin
+                        rdata_o <= {r[wbs_adr_i[9:5]][148:117]};
+                    end
+                end
+
+
+
+
+
+
+
+
+
                 REGISTERDATA: begin // the test register is 30 now in order to acomodate testing of the ECC and triple redundacy
                     ready_o <= 1'b1;
                     if (wbs_we_i) begin
@@ -294,9 +353,6 @@ module register_data #(
                         rdata_o <= {r[7][148:117]};
                     end
                 end
-                ADDRBASE + 4: begin ready_o <= 1'b1; end
-                ADDRBASE + 8: begin ready_o <= 1'b1; end
-                ADDRBASE + 16: begin ready_o <= 1'b1; end
                 default: ready_o <= 1'b0;
             endcase
             operational_o <= 1'b0;
