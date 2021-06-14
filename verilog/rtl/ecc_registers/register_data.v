@@ -15,8 +15,7 @@ module register_data #(
         parameter integer REGDIRSIZE = 5,
         parameter integer ECCBITS = 7,
         parameter integer WHISBONE_ADR = 32,
-        parameter [31:0]  ADDRBASE     = 32'h3000_0000,
-        parameter [31:0]  REGISTERDATA  = ADDRBASE
+        parameter [19:0]  ADDRBASE     = 20'h3010_0
     )
     (
         `ifdef USE_POWER_PINS
@@ -71,15 +70,17 @@ module register_data #(
     // register bank
     reg [((REGISTERS/ SEGMENTS) * (WORD_SIZE + ECCBITS)) - 1 : 0 ] r[0:SEGMENTS-1];
 
+
+
     //triple_redunancy calculation
-    assign  nand_1 = rregister_i & operation_type_i == 2'b01 ? r[register_i[REGDIRSIZE - 1: 2]][31:0]  ~& r[register_i[REGDIRSIZE - 1: 2]][63:32]: {WORD_SIZE + ECCBITS{1'b0}};
-    assign  nand_2 = rregister_i & operation_type_i == 2'b01 ? r[register_i[REGDIRSIZE - 1: 2]][63:32] ~& r[register_i[REGDIRSIZE - 1: 2]][95:64]: {WORD_SIZE + ECCBITS{1'b0}};
-    assign  nand_3 = rregister_i & operation_type_i == 2'b01 ? r[register_i[REGDIRSIZE - 1: 2]][31:0]  ~& r[register_i[REGDIRSIZE - 1: 2]][95:64]: {WORD_SIZE + ECCBITS{1'b0}};
+    assign  nand_1 = rregister_i & operation_type_i == 2'b01 ? r[register_i[REGDIRSIZE - 1: 2]][31:0]  ~& r[register_i[REGDIRSIZE - 1: 2]][70:39]: {WORD_SIZE + ECCBITS{1'b0}};
+    assign  nand_2 = rregister_i & operation_type_i == 2'b01 ? r[register_i[REGDIRSIZE - 1: 2]][70:39] ~& r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
+    assign  nand_3 = rregister_i & operation_type_i == 2'b01 ? r[register_i[REGDIRSIZE - 1: 2]][31:0]  ~& r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
 
     //triple_redunancy status
-    assign  xor_1 = rregister_i & operation_type_i == 2'b01 ?  r[register_i[REGDIRSIZE - 1: 2]][31:0]  ^ r[register_i[REGDIRSIZE - 1: 2]][63:32] : {WORD_SIZE + ECCBITS{1'b0}};
-    assign  xor_2 = rregister_i & operation_type_i == 2'b01 ?  r[register_i[REGDIRSIZE - 1: 2]][63:32] ^ r[register_i[REGDIRSIZE - 1: 2]][95:64]: {WORD_SIZE + ECCBITS{1'b0}};
-    assign  xor_3 = rregister_i & operation_type_i == 2'b01 ?  r[register_i[REGDIRSIZE - 1: 2]][31:0]  ^ r[register_i[REGDIRSIZE - 1: 2]][95:64]: {WORD_SIZE + ECCBITS{1'b0}};
+    assign  xor_1 = rregister_i & operation_type_i == 2'b01 ?  r[register_i[REGDIRSIZE - 1: 2]][31:0]  ^ r[register_i[REGDIRSIZE - 1: 2]][70:39] : {WORD_SIZE + ECCBITS{1'b0}};
+    assign  xor_2 = rregister_i & operation_type_i == 2'b01 ?  r[register_i[REGDIRSIZE - 1: 2]][70:39] ^ r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
+    assign  xor_3 = rregister_i & operation_type_i == 2'b01 ?  r[register_i[REGDIRSIZE - 1: 2]][31:0]  ^ r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
     
     assign xor_reduce_1 = |xor_1;
     assign xor_reduce_2 = |xor_2;
@@ -218,7 +219,7 @@ module register_data #(
             end 
             // triple redundaccy value
             else if (operation_type_i == 3'b001) begin
-                r[register_i[REGDIRSIZE - 1: 2]][95:0] <= {data_to_register_i[31:0],data_to_register_i[31:0],data_to_register_i[31:0]};
+                r[register_i[REGDIRSIZE - 1: 2]][116:0] <= {7'b0000000,data_to_register_i[31:0],7'b0000000,data_to_register_i[31:0],7'b0000000,data_to_register_i[31:0]};
                 store_data_o <= {WORD_SIZE + ECCBITS{1'b0}};
                 redundat_validation_o <= 2'b00;
                 operational_o <= 1'b1;
@@ -280,82 +281,69 @@ module register_data #(
             end
 
         end
-        if (valid_i && wbs_adr_i[31:16] == 16'h3000) begin
+        if (valid_i && wbs_adr_i[31:12] == ADDRBASE) begin
             // big 32 register switch case for the whisbone acces to the registers
-            case (wbs_adr_i[4:0]) 
+            case (wbs_adr_i[3:0]) 
                 4'h0: begin
                     ready_o <= 1'b1;
                     if (wbs_we_i) begin
-                        if (wstrb_i[0]) r[wbs_adr_i[9:5]][7:0]     <= wdata_i[7:0];
-                        if (wstrb_i[1]) r[wbs_adr_i[9:5]][15:8]    <= wdata_i[15:8];
-                        if (wstrb_i[2]) r[wbs_adr_i[9:5]][23:16]   <= wdata_i[23:16];
-                        if (wstrb_i[3]) r[wbs_adr_i[9:5]][31:24]   <= wdata_i[31:24];
+                        if (wstrb_i[0]) r[wbs_adr_i[8:4]][7:0]     <= wdata_i[7:0];
+                        if (wstrb_i[1]) r[wbs_adr_i[8:4]][15:8]    <= wdata_i[15:8];
+                        if (wstrb_i[2]) r[wbs_adr_i[8:4]][23:16]   <= wdata_i[23:16];
+                        if (wstrb_i[3]) r[wbs_adr_i[8:4]][31:24]   <= wdata_i[31:24];
                     end
                     else begin
-                        rdata_o <= {r[wbs_adr_i[9:5]][31:0]};
+                        rdata_o <= {r[wbs_adr_i[8:4]][31:0]};
                     end
 
                 end
                 4'h4: begin
                     ready_o <= 1'b1;
                     if (wbs_we_i) begin
-                        if (wstrb_i[0]) r[wbs_adr_i[9:5]][46:39]   <= wdata_i[7:0];
-                        if (wstrb_i[1]) r[wbs_adr_i[9:5]][54:47]   <= wdata_i[15:8];
-                        if (wstrb_i[2]) r[wbs_adr_i[9:5]][62:55]   <= wdata_i[23:16];
-                        if (wstrb_i[3]) r[wbs_adr_i[9:5]][70:63]   <= wdata_i[31:24];
+                        if (wstrb_i[0]) r[wbs_adr_i[8:4]][46:39]   <= wdata_i[7:0];
+                        if (wstrb_i[1]) r[wbs_adr_i[8:4]][54:47]   <= wdata_i[15:8];
+                        if (wstrb_i[2]) r[wbs_adr_i[8:4]][62:55]   <= wdata_i[23:16];
+                        if (wstrb_i[3]) r[wbs_adr_i[8:4]][70:63]   <= wdata_i[31:24];
                     end
                     else begin
-                        rdata_o <= {r[wbs_adr_i[9:5]][70:39]};
+                        rdata_o <= {r[wbs_adr_i[8:4]][70:39]};
                     end
                 end
                 4'h8: begin
                     ready_o <= 1'b1;
                     if (wbs_we_i) begin
-                        if (wstrb_i[0]) r[wbs_adr_i[9:5]][85:78]   <= wdata_i[7:0];
-                        if (wstrb_i[1]) r[wbs_adr_i[9:5]][93:86]   <= wdata_i[15:8];
-                        if (wstrb_i[2]) r[wbs_adr_i[9:5]][101:94]  <= wdata_i[23:16];
-                        if (wstrb_i[3]) r[wbs_adr_i[9:5]][109:102] <= wdata_i[31:24];
+                        if (wstrb_i[0]) r[wbs_adr_i[8:4]][85:78]   <= wdata_i[7:0];
+                        if (wstrb_i[1]) r[wbs_adr_i[8:4]][93:86]   <= wdata_i[15:8];
+                        if (wstrb_i[2]) r[wbs_adr_i[8:4]][101:94]  <= wdata_i[23:16];
+                        if (wstrb_i[3]) r[wbs_adr_i[8:4]][109:102] <= wdata_i[31:24];
                     end
                     else begin
-                        rdata_o <= {r[wbs_adr_i[9:5]][109:78]};
+                        rdata_o <= {r[wbs_adr_i[8:4]][109:78]};
                     end
                 end
                 4'hC: begin
                     ready_o <= 1'b1;
                     if (wbs_we_i) begin
-                        if (wstrb_i[0]) r[wbs_adr_i[9:5]][124:117]  <= wdata_i[7:0];
-                        if (wstrb_i[1]) r[wbs_adr_i[9:5]][135:125]  <= wdata_i[15:8];
-                        if (wstrb_i[2]) r[wbs_adr_i[9:5]][140:136]  <= wdata_i[23:16];
-                        if (wstrb_i[3]) r[wbs_adr_i[9:5]][148:141]  <= wdata_i[31:24];
+                        if (wstrb_i[0]) r[wbs_adr_i[8:4]][124:117]  <= wdata_i[7:0];
+                        if (wstrb_i[1]) r[wbs_adr_i[8:4]][135:125]  <= wdata_i[15:8];
+                        if (wstrb_i[2]) r[wbs_adr_i[8:4]][140:136]  <= wdata_i[23:16];
+                        if (wstrb_i[3]) r[wbs_adr_i[8:4]][148:141]  <= wdata_i[31:24];
                     end
                     else begin
-                        rdata_o <= {r[wbs_adr_i[9:5]][148:117]};
+                        rdata_o <= {r[wbs_adr_i[8:4]][148:117]};
                     end
                 end
-
-
-
-
-
-
-
-
-
-                REGISTERDATA: begin // the test register is 30 now in order to acomodate testing of the ECC and triple redundacy
-                    ready_o <= 1'b1;
-                    if (wbs_we_i) begin
-                        if (wstrb_i[0]) r[7][85:78]   <= wdata_i[7:0];
-                        if (wstrb_i[1]) r[7][93:86]   <= wdata_i[15:8];
-                        if (wstrb_i[2]) r[7][101:94]  <= wdata_i[23:16];
-                        if (wstrb_i[3]) r[7][109:102] <= wdata_i[31:24];
-                    end
-                    else begin
-                        rdata_o <= {r[7][148:117]};
-                    end
-                end
-                default: ready_o <= 1'b0;
+                default: ready_o <= 1'b1; // if is not one put 1 to continue the wisbone execution
             endcase
             operational_o <= 1'b0;
+        end
+        else if (valid_i && wbs_adr_i[31:28] == ADDRBASE[19:16]) begin
+            // case for the error state that the address is not correct. 
+            //Also if the adrres is valid for the PMU will create a on signal but will be filter out that with or gat in the top 
+            ready_o <= 1'b1;
+        end
+        else begin
+            ready_o <= 1'b0;
         end
     end
         

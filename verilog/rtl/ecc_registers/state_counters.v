@@ -15,7 +15,7 @@ module state_counters #(
         parameter integer COUNTERSIZE = 32,
         parameter integer REGDIRSIZE = 5,
         parameter integer REGISTERS = 32,
-        parameter [16:0]  ADDRBASE     = 16'h4000
+        parameter [19:0]  ADDRBASE     = 20'h3000_0
     )
     (
         `ifdef USE_POWER_PINS
@@ -249,55 +249,55 @@ module state_counters #(
                 end
             end
 
-            if (valid_i && wbs_adr_i[31:16] == ADDRBASE) begin
-                case (wbs_adr_i[4:0]) 
+            if (valid_i && wbs_adr_i[31:12] == ADDRBASE) begin
+                case (wbs_adr_i[3:0]) 
                 4'h0: begin
                     ready_o <= 1'b1;
                     if (wbs_we_i) begin
-                        if (wstrb_i[0]) reads_register[wbs_adr_i[9:5]][7:0]   <= wdata_i[7:0];
-                        if (wstrb_i[1]) reads_register[wbs_adr_i[9:5]][15:8]  <= wdata_i[15:8];
-                        if (wstrb_i[2]) reads_register[wbs_adr_i[9:5]][23:16] <= wdata_i[23:16];
-                        if (wstrb_i[3]) reads_register[wbs_adr_i[9:5]][31:24] <= wdata_i[31:24];
+                        if (wstrb_i[0]) reads_register[wbs_adr_i[8:4]][7:0]   <= wdata_i[7:0];
+                        if (wstrb_i[1]) reads_register[wbs_adr_i[8:4]][15:8]  <= wdata_i[15:8];
+                        if (wstrb_i[2]) reads_register[wbs_adr_i[8:4]][23:16] <= wdata_i[23:16];
+                        if (wstrb_i[3]) reads_register[wbs_adr_i[8:4]][31:24] <= wdata_i[31:24];
                     end
                     else begin
-                        rdata_o <= {reads_register[wbs_adr_i[9:5]]};
+                        rdata_o <= {reads_register[wbs_adr_i[8:4]]};
                     end
 
                 end
                 4'h4: begin
                     ready_o <= 1'b1;
                     if (wbs_we_i) begin
-                        if (wstrb_i[0]) writes_register[wbs_adr_i[9:5]][7:0]   <= wdata_i[7:0];
-                        if (wstrb_i[1]) writes_register[wbs_adr_i[9:5]][15:8]  <= wdata_i[15:8];
-                        if (wstrb_i[2]) writes_register[wbs_adr_i[9:5]][23:16] <= wdata_i[23:16];
-                        if (wstrb_i[3]) writes_register[wbs_adr_i[9:5]][31:24] <= wdata_i[31:24];
+                        if (wstrb_i[0]) writes_register[wbs_adr_i[8:4]][7:0]   <= wdata_i[7:0];
+                        if (wstrb_i[1]) writes_register[wbs_adr_i[8:4]][15:8]  <= wdata_i[15:8];
+                        if (wstrb_i[2]) writes_register[wbs_adr_i[8:4]][23:16] <= wdata_i[23:16];
+                        if (wstrb_i[3]) writes_register[wbs_adr_i[8:4]][31:24] <= wdata_i[31:24];
                     end
                     else begin
-                        rdata_o <= {writes_register[wbs_adr_i[9:5]]};
+                        rdata_o <= {writes_register[wbs_adr_i[8:4]]};
                     end
                 end
                 4'h8: begin
                     ready_o <= 1'b1;
                     if (wbs_we_i) begin
-                        if (wstrb_i[0]) corrected_errors[wbs_adr_i[9:5]][7:0]   <= wdata_i[7:0];
-                        if (wstrb_i[1]) corrected_errors[wbs_adr_i[9:5]][15:8]  <= wdata_i[15:8];
-                        if (wstrb_i[2]) corrected_errors[wbs_adr_i[9:5]][23:16] <= wdata_i[23:16];
-                        if (wstrb_i[3]) corrected_errors[wbs_adr_i[9:5]][31:24] <= wdata_i[31:24];
+                        if (wstrb_i[0]) corrected_errors[wbs_adr_i[8:4]][7:0]   <= wdata_i[7:0];
+                        if (wstrb_i[1]) corrected_errors[wbs_adr_i[8:4]][15:8]  <= wdata_i[15:8];
+                        if (wstrb_i[2]) corrected_errors[wbs_adr_i[8:4]][23:16] <= wdata_i[23:16];
+                        if (wstrb_i[3]) corrected_errors[wbs_adr_i[8:4]][31:24] <= wdata_i[31:24];
                     end
                     else begin
-                        rdata_o <= {corrected_errors[wbs_adr_i[9:5]]};
+                        rdata_o <= {corrected_errors[wbs_adr_i[8:4]]};
                     end
                 end
                 4'hC: begin
                     ready_o <= 1'b1;
                     if (wbs_we_i) begin
-                        if (wstrb_i[0]) uncorrected_errors[wbs_adr_i[9:5]][7:0]   <= wdata_i[7:0];
-                        if (wstrb_i[1]) uncorrected_errors[wbs_adr_i[9:5]][15:8]  <= wdata_i[15:8];
-                        if (wstrb_i[2]) uncorrected_errors[wbs_adr_i[9:5]][23:16] <= wdata_i[23:16];
-                        if (wstrb_i[3]) uncorrected_errors[wbs_adr_i[9:5]][31:24] <= wdata_i[31:24];
+                        if (wstrb_i[0]) uncorrected_errors[wbs_adr_i[8:4]][7:0]   <= wdata_i[7:0];
+                        if (wstrb_i[1]) uncorrected_errors[wbs_adr_i[8:4]][15:8]  <= wdata_i[15:8];
+                        if (wstrb_i[2]) uncorrected_errors[wbs_adr_i[8:4]][23:16] <= wdata_i[23:16];
+                        if (wstrb_i[3]) uncorrected_errors[wbs_adr_i[8:4]][31:24] <= wdata_i[31:24];
                     end
                     else begin
-                        rdata_o <= {uncorrected_errors[wbs_adr_i[9:5]]};
+                        rdata_o <= {uncorrected_errors[wbs_adr_i[8:4]]};
                     end
                 end
                 default: ready_o <= 1'b0;
@@ -305,8 +305,8 @@ module state_counters #(
                 endcase
                 
             end
-            if (valid_i && wbs_adr_i[31:16] == ADDRBASE + 16'h0100) begin 
-                 case (wbs_adr_i[4:0]) 
+            else if (valid_i && wbs_adr_i[31:12] == ADDRBASE + 20'h000_1) begin 
+                case (wbs_adr_i[3:0]) 
                 4'h0: begin
                     ready_o <= 1'b1;
                     if (wbs_we_i) begin
@@ -356,10 +356,13 @@ module state_counters #(
                         rdata_o <= {total_uncorrected_errors};
                     end
                 end
-                default: ready_o <= 1'b0;
+                default: ready_o <= 1'b1; // if is not one put 1 to continue the wisbone execution if the addrss is bad
                 
                 endcase
 
+            end
+            else begin
+                ready_o <= 1'b0;
             end
         end
     end

@@ -121,7 +121,10 @@ user_proj mprj (
     .io_oeb(io_oeb),
 
     // IRQ
-    .irq(user_irq)
+    .irq(user_irq),
+
+    // user clock
+    .user_clk(user_clock2)
 );
 
 endmodule	// user_project_wrapper

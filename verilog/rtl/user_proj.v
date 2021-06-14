@@ -78,7 +78,11 @@ module user_proj #(
     output [`MPRJ_IO_PADS-1:0] io_oeb,
 
     // IRQ
-    output [2:0] irq
+    output [2:0] irq,
+
+    // User CLK
+    
+    input user_clk
 );
     wire clk;
     wire rst;
@@ -104,7 +108,7 @@ module user_proj #(
     assign wdata = wbs_dat_i;
 
     // IO
-    assign io_out = {output_verification,output_data[15:0], 20'b0};//{6'b000000,output_data};
+    assign io_out = {output_verification,output_data[15:0],operational, 19'b0};//{6'b000000,output_data};
     assign io_oeb = {(`MPRJ_IO_PADS-1){rst}};
 
     // IRQ
@@ -112,7 +116,8 @@ module user_proj #(
 
     // LA probes 
     // Assuming LA probes [65:64] are for controlling the count clk & reset  
-    assign clk = (~la_oenb[64]) ? la_data_in[64]: wb_clk_i;
+    assign clk = (~la_oenb[66]) ? (~la_oenb[65] ? la_data_in[64] : user_clk ) : wb_clk_i;
+    //assign clk = (~la_oenb[64]) ? la_data_in[64]: wb_clk_i;
     assign rst = (~la_oenb[65]) ? la_data_in[65]: wb_rst_i;
     // Assuming LA probes [63:32] are for controlling the input data
     //assign la_write = ~la_oenb[63:32] & ~{WORD_SIZE{valid}};

@@ -62,9 +62,13 @@ module register_file #(
     wire ready_pmu; // wire to connect to the PMU
     wire ready_pmu_backup; // wire to connect to the PMU
     wire ready_register;// wire to connecto to the register data
+    wire [WORD_SIZE - 1 : 0] rdata_register; // wire that carries the data form de register data
+    wire [WORD_SIZE - 1 : 0] rdata_pmu; // wire that carries the data form de pmu 
+    wire [WORD_SIZE - 1 : 0] rdata_pmu_backup; // wire that carries the data form de pmu backup
     wire [WORD_SIZE - 1 : 0] store_data_DV_DO; // wiring between store_data_o of module DV and store_data_i of module DO
 
     assign ready_o = ready_pmu | ready_register | ready_pmu_backup;
+    assign rdata_o = ready_pmu ? rdata_pmu : ready_pmu_backup ? rdata_pmu_backup : rdata_register;
 
     parity_calculator #(
         .WORD_SIZE (WORD_SIZE),
@@ -92,7 +96,8 @@ module register_file #(
         .REGISTERS (REGISTERS),
         .REGDIRSIZE (REGDIRSIZE),
         .ECCBITS (ECCBITS),
-        .WHISBONE_ADR (WHISBONE_ADR)
+        .WHISBONE_ADR (WHISBONE_ADR),
+        .ADDRBASE (20'h3010_0)
 
     )
     inst_RD(
@@ -121,7 +126,7 @@ module register_file #(
         .store_data_o              (store_data_RD_DV),
         .operational_o             (operational_o),
         .ready_o                   (ready_register),
-        .rdata_o                   (rdata_o),
+        .rdata_o                   (rdata_register),
         .redundat_validation_o (redunancy_output_DV_PMU)
     );
 
@@ -175,7 +180,8 @@ module register_file #(
         .WHISBONE_ADR (WHISBONE_ADR),
         .REGDIRSIZE (REGDIRSIZE),
         .COUNTERSIZE (COUNTERSIZE),
-        .REGISTERS (REGISTERS)
+        .REGISTERS (REGISTERS),
+        .ADDRBASE (20'h3000_0)
     )
     inst_PMU(
         `ifdef USE_POWER_PINS
@@ -191,6 +197,8 @@ module register_file #(
         .clk_i                    (clk_i ),
         .rst_i                    (rst_i ),
         .register_i               (register_i ),
+        .wregister_i              (wregister_i ),
+        .rregister_i              (rregister_i ),
         .valid_i                  (valid_i),
         .wstrb_i                  (wstrb_i),
         .wdata_i                  (wdata_i),
@@ -198,7 +206,7 @@ module register_file #(
         .wbs_adr_i                (wbs_adr_i),
         .operation_result_i       (operation_result_DV_PMU),
         .ready_o                  (ready_pmu),
-        .rdata_o                  (rdata_o)
+        .rdata_o                  (rdata_pmu)
     );
 
     state_counters #(
@@ -208,7 +216,7 @@ module register_file #(
         .COUNTERSIZE (COUNTERSIZE),
         .REGDIRSIZE (REGDIRSIZE),
         .REGISTERS (REGISTERS),
-        .ADDRBASE (16'h5000)
+        .ADDRBASE (20'h3001_0)
     )
     inst_PMUBACKUP(
         `ifdef USE_POWER_PINS
@@ -224,6 +232,8 @@ module register_file #(
         .clk_i                    (clk_i ),
         .rst_i                    (rst_i ),
         .register_i               (register_i ),
+        .wregister_i               (wregister_i ),
+        .rregister_i               (rregister_i ),
         .valid_i                  (valid_i),
         .wstrb_i                  (wstrb_i),
         .wdata_i                  (wdata_i),
@@ -231,7 +241,7 @@ module register_file #(
         .wbs_adr_i                (wbs_adr_i),
         .operation_result_i       (operation_result_DV_PMU),
         .ready_o                  (ready_pmu_backup),
-        .rdata_o                  (rdata_o)
+        .rdata_o                  (rdata_pmu_backup)
     );
 
 

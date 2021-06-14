@@ -42,6 +42,7 @@ echo "Start LA test 10"
 echo "###############################################" >>  test.log
 echo "Start LA test 10" >>  test.log
 make verify-la_test10 >>  ./test.log
+echo "Start LA test 11"
 echo "###############################################" >>  test.log
 echo "Start LA test 11" >>  test.log
 make verify-la_test11 >>  ./test.log
@@ -57,4 +58,12 @@ echo "Start WB test 3"
 echo "###############################################" >>  test.log
 echo "Start WB test 3" >>  test.log
 make verify-wb_test3 >>  ./test.log
+echo "Start WB test 4"
+echo "###############################################" >>  test.log
+echo "Start WB test 4" >>  test.log
+make verify-wb_test4 >>  ./test.log
+echo "Start WB test 5"
+echo "###############################################" >>  test.log
+echo "Start WB test 5" >>  test.log
+make verify-wb_test5 >>  ./test.log
 echo "End Test"

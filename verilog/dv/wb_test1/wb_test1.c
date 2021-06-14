@@ -48,7 +48,7 @@ void read_value_from_register(uint32_t selected_register){
 
 }
 
-#define reg_wb_register  (*(volatile uint32_t*)0x30000000)
+#define reg_wb_register  (*(volatile uint32_t*)0x30100000)
 
 void main()
 {
@@ -131,7 +131,7 @@ void main()
 	// inputs to the cpu are outpus for my project denoted for been 1
 	reg_la0_oenb = reg_la0_iena = 0x00000000;    // [31:0] 
 	reg_la1_oenb = reg_la1_iena = 0x00000000;    // [63:32]
-	reg_la2_oenb = reg_la2_iena = 0xFFFFFFFC;    // [95:64]
+	reg_la2_oenb = reg_la2_iena = 0xFFFFFFF8;    // [95:64]
 	reg_la3_oenb = reg_la3_iena = 0xFFFFFFFF;    // [127:96]
 
 	
