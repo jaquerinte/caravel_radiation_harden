@@ -3,16 +3,48 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Caravel Build](https://github.com/efabless/caravel_project_example/actions/workflows/caravel_build.yml/badge.svg)](https://github.com/efabless/caravel_project_example/actions/workflows/caravel_build.yml)
 
 ## **Authors**
-- Ivan Rodriguez Ferrandez (UPC-BSC)
+- Ivan Rodriguez-Ferrandez (UPC-BSC)
 - Alvaro Jover-Alvarez (UPC-BSC)
 - Leonidas Kosmidis (BSC-UPC)
 
 
 ![](readme_data/space_shuttle_patch_crop.png)
 
-### **Main Version of the chip: 2.0V**  
+### **Main Version of the chip: 2.0V EXTENDED**  
 
 <br/>
+
+## **Change Log**
+
+- Version 2.0V Extended:
+  - Added support for the wishbone interface to access all of the internal register data.
+  - Added the PMU to have counters for write operations.
+  - Added the PMU counters for writes, reads, uncorrected errors and corrected errors for each of the 32 registers.
+  - Added duplicate PMU for have a copy of the values.
+  
+- Version 2.0V:
+  - Added support for shadow registers (duplication).
+  - Added support for ECC shadow registers (duplication with ECC).
+  - Added the possibility to store a value without any protection.
+  
+- Version 1.5V:
+  - Bug fix wishbone interface counters.
+  
+- Version 1.4V:
+  - Added storage in triplets (data triplication).
+  
+- Version 1.3V:
+  - Increase from 8 registers to 32 registers.
+  - Bug fix  in the wishbone interface to correct access the internal register 31.
+
+- Version 1.2V: 
+  - Bug fix for the ECC generator.
+
+- Version 1.1V:
+  - Bug fix for the ECC parity detector.
+
+- Version 1.0V:
+  - Implemented ECC registers for 8 registers.
 
 ## **Description**
 
@@ -252,24 +284,34 @@ The ecc registers module is compose of a set of multiple sub-modules. The follow
 - Register data. This module contains all of the registers and stores the data with the parity bits.
 - Data verificator. This modules takes the input value form the Register data and the parity bits and verifies and corrects (if needed) the value.
 - decoder_output. This module is a skeleton module that servers only to get the signals to the top module.
-- state counters. This module contains all of the counters that keep track of the number of reads, number of 1 bit flip occurrences and number of 2 bit flip occurrences.
+- state counters (PMU). This module contains all of the counters that keep track of the number of reads, number of 1 bit flip occurrences and number of 2 bit flip occurrences.
 
 ## **Wishbone Description**
-In this chip is implemented the wishbone to access the 32 bit counters and also to access the internal register 32 in order to modify the first 32 bits for testing of the ECC capabilities.
+In this chip is implemented the wishbone to access the 32 bit counters and also to access the internal registers  in order to modify the first 32 bits for testing of the ECC capabilities.
 
 The chip have to modes, operation mode where it performs the register file operations or in wishbone operation. The both modes are independent and can not be operated at the same time.
 
  ### **Address Space**
 
-Each of the possible accesses of the wishbone has a predefined address to access. Following the design of caravel the first address is the 0x30000000. All of the possible address that are defined are configure to be read from or write to the wishbone interface. Hereinafter is the list of implemented addresses for the chip.
+Each of the possible accesses of the wishbone has a predefined address to access. Following the design of caravel the first address is the 0x3000_0000. All of the possible address that are defined are configure to be read from or write to the wishbone interface.
+Regarding the PMU, now that you can access a counter per each of the registers. So the base address of the PMU points to the reads form the register 0, the following address point to writes, corrected errors, uncorrected errors. So each set of counters are separate by 4 address. so  hereinafter this is  the list of implemented addresses for the chip.
 
-- 0x30000000 : This address access the internal register 32.
-
-- 0x30000004 : This address access the number of reads performance counter.
-
-- 0x30000008 : This address access the performance counter that counts the number of corrected errors during reads.
-
-- 0x3000000C : This address access the performance counter that counts the number of uncorrected errors during reads.
+- 0x3000_0000: Base address of the PMU-1.
+  - 0x3000_0200: Max address of the PMU-1.
+- 0x3000_1000: PMU-1 Total values counters.
+  - 0x3000_1000: total reads.
+  - 0x3000_1004: total writes.
+  - 0x3000_1008: total corrected errors.
+  - 0x3000_100C: total uncorrected errors.
+- 0x3001_0000: Base address of the PMU2
+  - 0x3001_0200: Max address of the PMU2.
+- 0x3001_1000: PMU2 total
+  - 0x3001_1000: total reads.
+  - 0x3001_1004: total writes.
+  - 0x3001_1008: total corrected errors.
+  - 0x3001_100C: total uncorrected errors.
+- 0x3010_0000: Internal register file register 0.
+  - 0x3010_007F: Internal register file register register 31,
 
  ### **Software Example**
 
@@ -333,7 +375,7 @@ Now we can check the value accessing to the defined variable.
 Now is the full example code
 
 ```C++
-#define reg_wb_counter (*(volatile unint32_t*)0x30000004)
+#define reg_wb_counter (*(volatile unint32_t*)0x30000000)
 
 void main()
 {
@@ -410,3 +452,11 @@ For this project there is a set of test in order to verify the functionality des
 - wb_test2: This test uses the wishbone interface to modify one bit of an internal register and also makes some reads in oder to check the performance counters.
 
 - wb_test3: This test uses the wishbone interface to modify one value  of an internal triple redundant register and also makes a red to check that the output value is correct and the corrected stage is detected.
+
+- wb_test4: This test uses the wishbone interface to add a value per each of the 32 registers and then using the chip we read the 32 values. This is for testing the proper access of all of the registers.
+
+- wb_test5: This test is similar to the wb_test2 but verifies that the PMU-1 and PMU-2 have the same values for the total reads and corrected errors.
+
+- wb_test6. Using the base of the wb_test2 this test try's to access a non valid address the expected result is that the program finish without problems and without halting the processors. 
+
+- wb_test7. Using as a base the la_test2, we write to all of the registers and we read all of them and we check some of the  individual counters to check that  the number of reads correctly as well the total reads and writes form the PMU-1 and PMU-2.
