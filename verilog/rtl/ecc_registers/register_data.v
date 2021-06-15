@@ -219,7 +219,7 @@ module register_data #(
             end 
             // triple redundaccy value
             else if (operation_type_i == 3'b001) begin
-                r[register_i[REGDIRSIZE - 1: 2]][116:0] <= {7'b0000000,data_to_register_i[31:0],7'b0000000,data_to_register_i[31:0],7'b0000000,data_to_register_i[31:0]};
+                r[register_i[REGDIRSIZE - 1: 2]][116:0] <= {data_to_register_i,data_to_register_i,data_to_register_i};
                 store_data_o <= {WORD_SIZE + ECCBITS{1'b0}};
                 redundat_validation_o <= 2'b00;
                 operational_o <= 1'b1;

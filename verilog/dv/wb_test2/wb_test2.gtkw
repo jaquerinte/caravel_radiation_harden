@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Sun Jun 13 09:45:33 2021
+[*] Tue Jun 15 07:47:47 2021
 [*]
 [dumpfile] "/home/shuttle/core_radiation_hard/verilog/dv/wb_test2/wb_test2.vcd"
-[dumpfile_mtime] "Sat Jun 12 22:44:29 2021"
-[dumpfile_size] 1649511525
+[dumpfile_mtime] "Tue Jun 15 05:30:21 2021"
+[dumpfile_size] 1641689878
 [savefile] "/home/shuttle/core_radiation_hard/verilog/dv/wb_test2/wb_test2.gtkw"
-[timestart] 1227360000
+[timestart] 493800000
 [size] 1848 1016
 [pos] -1 -1
-*-23.000000 746087500 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-25.000000 676000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] wb_test2_tb.
 [treeopen] wb_test2_tb.uut.
 [treeopen] wb_test2_tb.uut.mprj.

@@ -161,7 +161,7 @@ void main()
     reg_wb_register = 0x00000003;
     clock();
     // re enable clock
-    reg_la2_oenb = 0xFFFFFFFC;
+    reg_la2_oenb = 0xFFFFFFF8;
 
     read_value_from_register(4);
     clock();
@@ -188,7 +188,7 @@ void main()
 
     clock();
     // re enable clock
-    reg_la2_oenb = 0xFFFFFFFC;
+    reg_la2_oenb = 0xFFFFFFF8;
     read_value_from_register(0);
     clock();
     

@@ -108,7 +108,7 @@ module user_proj #(
     assign wdata = wbs_dat_i;
 
     // IO
-    assign io_out = {output_verification,output_data[15:0],operational, 19'b0};//{6'b000000,output_data};
+    assign io_out = {output_verification,output_data[15:0],operational, 19'b0};//{6'b000000,output_data};b
     assign io_oeb = {(`MPRJ_IO_PADS-1){rst}};
 
     // IRQ

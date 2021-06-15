@@ -66,4 +66,12 @@ echo "Start WB test 5"
 echo "###############################################" >>  test.log
 echo "Start WB test 5" >>  test.log
 make verify-wb_test5 >>  ./test.log
+echo "Start WB test 6"
+echo "###############################################" >>  test.log
+echo "Start WB test 6" >>  test.log
+make verify-wb_test6 >>  ./test.log
+echo "Start WB test 7"
+echo "###############################################" >>  test.log
+echo "Start WB test 7" >>  test.log
+make verify-wb_test7 >>  ./test.log
 echo "End Test"

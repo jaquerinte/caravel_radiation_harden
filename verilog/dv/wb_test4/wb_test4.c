@@ -169,7 +169,7 @@ void main()
         reg_wb_register = reg_wb_register + 1;
 	}
     clock();
-    reg_la2_oenb = 0xFFFFFFFC;
+    reg_la2_oenb = 0xFFFFFFF8;
 
 	for (uint32_t i = 0; i < 32; ++i ){
 		read_value_from_register_no_proteccion(i);

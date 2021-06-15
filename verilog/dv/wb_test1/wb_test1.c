@@ -155,7 +155,7 @@ void main()
     //apply modification to the register
     reg_wb_register = 0x00000003;
     clock();
-    reg_la2_oenb = 0xFFFFFFFC;
+    reg_la2_oenb = 0xFFFFFFF8;
 
     read_value_from_register(0);
     clock();

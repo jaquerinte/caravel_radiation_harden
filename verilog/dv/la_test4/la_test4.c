@@ -156,6 +156,7 @@ void main()
 	add_value_to_register(25432,1);
 	clock();
 	add_value_to_register(38,2);
+	clock();
 
 	read_value_from_triplet_register(0);
 	clock();

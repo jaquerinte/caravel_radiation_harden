@@ -230,7 +230,7 @@ void main()
     }
     clock();
     // re enable clock
-    reg_la2_oenb = 0xFFFFFFFC;
+    reg_la2_oenb = 0xFFFFFFF8;
     add_value_to_register(50, 0);
     clock();
     read_value_from_register(0);
