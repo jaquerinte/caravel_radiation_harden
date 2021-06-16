@@ -35,7 +35,7 @@ set ::env(CLOCK_PERIOD) "10"
 
 
 set ::env(FP_SIZING) absolute
-set ::env(DIE_AREA) "0 0 1000 1000"
+set ::env(DIE_AREA) "0 0 1450 1450"
 set ::env(DESIGN_IS_CORE) 0
 
 set ::env(VDD_NETS) [list {vccd1} {vccd2} {vdda1} {vdda2}]
@@ -44,7 +44,8 @@ set ::env(GND_NETS) [list {vssd1} {vssd2} {vssa1} {vssa2}]
 set ::env(FP_PIN_ORDER_CFG) $script_dir/pin_order.cfg
 
 set ::env(PL_BASIC_PLACEMENT) 0
-set ::env(PL_TARGET_DENSITY) 0.2
+# closser to 0 less compact closer to 1 more compact
+set ::env(PL_TARGET_DENSITY) 0.46
 
 
 
@@ -52,6 +53,6 @@ set ::env(PL_TARGET_DENSITY) 0.2
 set ::env(RUN_CVC) 0
 
 #set ::env(ROUTING_OPT_ITERS) 70
-#set ::env(ROUTING_CORES) 8
+set ::env(ROUTING_CORES) 6
 #set ::env(DETAILED_ROUTER) drcu
 

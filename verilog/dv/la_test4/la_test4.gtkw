@@ -1,19 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Fri May 28 12:06:49 2021
+[*] Tue Jun 15 07:19:05 2021
 [*]
 [dumpfile] "/home/shuttle/core_radiation_hard/verilog/dv/la_test4/la_test4.vcd"
-[dumpfile_mtime] "Fri May 28 12:01:29 2021"
-[dumpfile_size] 2291794024
+[dumpfile_mtime] "Tue Jun 15 07:15:06 2021"
+[dumpfile_size] 2292201270
 [savefile] "/home/shuttle/core_radiation_hard/verilog/dv/la_test4/la_test4.gtkw"
-[timestart] 153100000
+[timestart] 437300000
 [size] 1848 1016
 [pos] -1 -1
-*-27.000000 523712500 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-25.000000 540300000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] la_test4_tb.
 [treeopen] la_test4_tb.uut.
 [treeopen] la_test4_tb.uut.mprj.
 [treeopen] la_test4_tb.uut.mprj.mprj.
+[treeopen] la_test4_tb.uut.mprj.mprj.register_file.
 [sst_width] 253
 [signals_width] 310
 [sst_expanded] 1
@@ -28,13 +29,23 @@ la_test4_tb.uut.mprj.mprj.register_file.register_i[4:0]
 @28
 la_test4_tb.uut.mprj.mprj.register_file.rregister_i
 la_test4_tb.uut.mprj.mprj.register_file.wregister_i
-la_test4_tb.uut.mprj.mprj.register_file.operation_type_i
 la_test4_tb.uut.mprj.mprj.register_file.operation_result_o[1:0]
 @22
 la_test4_tb.uut.mprj.mprj.register_file.store_data_o[31:0]
 @200
 -GPIO
-@23
+@22
 la_test4_tb.mprj_io[37:0]
+@200
+-
+-REGISTER DATA
+@22
+la_test4_tb.uut.mprj.mprj.register_file.inst_RD.xor_1[31:0]
+la_test4_tb.uut.mprj.mprj.register_file.inst_RD.xor_2[31:0]
+la_test4_tb.uut.mprj.mprj.register_file.inst_RD.xor_3[31:0]
+@28
+la_test4_tb.uut.mprj.mprj.register_file.inst_RD.xor_reduce_1
+la_test4_tb.uut.mprj.mprj.register_file.inst_RD.xor_reduce_2
+la_test4_tb.uut.mprj.mprj.register_file.inst_RD.xor_reduce_3
 [pattern_trace] 1
 [pattern_trace] 0

@@ -138,7 +138,7 @@ void main()
 	// inputs to the cpu are outpus for my project denoted for been 1
 	reg_la0_oenb = reg_la0_iena = 0x00000000;    // [31:0] 
 	reg_la1_oenb = reg_la1_iena = 0x00000000;    // [63:32]
-	reg_la2_oenb = reg_la2_iena = 0xFFFFFFFC;    // [95:64]
+	reg_la2_oenb = reg_la2_iena = 0xFFFFFFF8;    // [95:64]
 	reg_la3_oenb = reg_la3_iena = 0xFFFFFFFF;    // [127:96]
 
 	
@@ -156,6 +156,7 @@ void main()
 	add_value_to_register(25432,1);
 	clock();
 	add_value_to_register(38,2);
+	clock();
 
 	read_value_from_triplet_register(0);
 	clock();

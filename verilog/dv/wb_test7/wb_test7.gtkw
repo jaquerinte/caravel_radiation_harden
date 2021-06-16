@@ -1,0 +1,43 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Mon Jun 14 11:07:54 2021
+[*]
+[dumpfile] "/home/shuttle/core_radiation_hard/verilog/dv/wb_test7/wb_test7.vcd"
+[dumpfile_mtime] "Mon Jun 14 11:04:45 2021"
+[dumpfile_size] 2405440421
+[savefile] "/home/shuttle/core_radiation_hard/verilog/dv/wb_test7/wb_test7.gtkw"
+[timestart] 4999099400
+[size] 1848 1016
+[pos] -1 -1
+*-17.000000 4734071900 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] wb_test7_tb.
+[treeopen] wb_test7_tb.uut.
+[treeopen] wb_test7_tb.uut.mprj.
+[treeopen] wb_test7_tb.uut.mprj.mprj.
+[sst_width] 233
+[signals_width] 214
+[sst_expanded] 1
+[sst_vpaned_height] 289
+@200
+-TOP MODULE
+@28
+wb_test7_tb.uut.mprj.mprj.register_file.clk_i
+@22
+wb_test7_tb.uut.mprj.mprj.register_file.store_data_o[31:0]
+@28
+wb_test7_tb.uut.mprj.mprj.register_file.operation_result_o[1:0]
+@200
+-
+-WISHBONE TOP
+@22
+wb_test7_tb.uut.mprj.mprj.register_file.wdata_i[31:0]
+wb_test7_tb.uut.mprj.mprj.register_file.wbs_adr_i[31:0]
+wb_test7_tb.uut.mprj.mprj.register_file.wstrb_i[3:0]
+@28
+wb_test7_tb.uut.mprj.mprj.register_file.wbs_we_i
+@29
+wb_test7_tb.uut.mprj.mprj.register_file.ready_o
+@22
+wb_test7_tb.uut.mprj.mprj.register_file.rdata_o[31:0]
+[pattern_trace] 1
+[pattern_trace] 0

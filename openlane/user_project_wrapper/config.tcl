@@ -37,6 +37,7 @@ set ::env(CLOCK_PERIOD) "10"
 
 ## Internal Macros
 ### Macro Placement
+
 set ::env(MACRO_PLACEMENT_CFG) $script_dir/macro.cfg
 
 ### Black-box verilog and views
@@ -74,5 +75,6 @@ set ::env(FILL_INSERTION) 0
 set ::env(TAP_DECAP_INSERTION) 0
 set ::env(CLOCK_TREE_SYNTH) 0
 
-#set ::env(MAGIC_DRC_USE_GDS) 0
-#set ::env(MAGIC_EXT_USE_GDS) 1
+set ::env(ROUTING_CORES) 6
+set ::env(PL_BASIC_PLACEMENT) 0
+set ::env(ROUTING_OPT_ITERS) 70
