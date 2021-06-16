@@ -35,7 +35,7 @@ set ::env(CLOCK_PERIOD) "10"
 
 
 set ::env(FP_SIZING) absolute
-set ::env(DIE_AREA) "0 0 1400 1300"
+set ::env(DIE_AREA) "0 0 1450 1450"
 set ::env(DESIGN_IS_CORE) 0
 
 set ::env(VDD_NETS) [list {vccd1} {vccd2} {vdda1} {vdda2}]
@@ -45,7 +45,7 @@ set ::env(FP_PIN_ORDER_CFG) $script_dir/pin_order.cfg
 
 set ::env(PL_BASIC_PLACEMENT) 0
 # closser to 0 less compact closer to 1 more compact
-set ::env(PL_TARGET_DENSITY) 0.43
+set ::env(PL_TARGET_DENSITY) 0.46
 
 
 
