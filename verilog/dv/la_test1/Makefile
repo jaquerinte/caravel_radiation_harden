@@ -33,7 +33,7 @@ GCC_PREFIX?=riscv32-unknown-elf
 PDK_PATH?=/ef/tech/SW/sky130A
 
 ## Simulation mode: RTL/GL
-SIM?=RTL
+SIM?=GL
 
 .SUFFIXES:
 

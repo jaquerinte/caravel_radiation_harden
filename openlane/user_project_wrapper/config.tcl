@@ -43,7 +43,7 @@ set ::env(MACRO_PLACEMENT_CFG) $script_dir/macro.cfg
 ### Black-box verilog and views
 set ::env(VERILOG_FILES_BLACKBOX) "\
 	$script_dir/../../caravel/verilog/rtl/defines.v \
-	$script_dir/../../verilog/rtl/user_proj.v \
+	$script_dir/../../verilog/rtl/user_proj_example.v \
 	$script_dir/../../verilog/rtl/ecc_registers/register_file.v \
 	$script_dir/../../verilog/rtl/ecc_registers/register_data.v \
 	$script_dir/../../verilog/rtl/ecc_registers/data_verificator.v \

@@ -15,12 +15,12 @@
 
 set script_dir [file dirname [file normalize [info script]]]
 
-set ::env(DESIGN_NAME) user_proj
+set ::env(DESIGN_NAME) user_proj_example
 
 
 set ::env(VERILOG_FILES) "\
 	$script_dir/../../caravel/verilog/rtl/defines.v \
-	$script_dir/../../verilog/rtl/user_proj.v \
+	$script_dir/../../verilog/rtl/user_proj_example.v \
 	$script_dir/../../verilog/rtl/ecc_registers/register_file.v \
 	$script_dir/../../verilog/rtl/ecc_registers/register_data.v \
 	$script_dir/../../verilog/rtl/ecc_registers/data_verificator.v \
