@@ -35,7 +35,7 @@
  *-------------------------------------------------------------
  */
 
-module user_proj #(
+module user_proj_example #(
     parameter integer WORD_SIZE = 32,
     parameter integer REGISTERS = 32,
     parameter integer REGDIRSIZE = 5,

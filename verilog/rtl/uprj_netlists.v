@@ -30,5 +30,5 @@
     `include "ecc_registers/decoder_output.v"
     `include "ecc_registers/parity_calculator.v"
     `include "ecc_registers/state_counters.v"
-    `include "user_proj.v"
+    `include "user_proj_example.v"
 `endif

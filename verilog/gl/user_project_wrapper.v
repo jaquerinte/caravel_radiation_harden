@@ -53,7 +53,7 @@ module user_project_wrapper (user_clock2,
  output [31:0] wbs_dat_o;
  input [3:0] wbs_sel_i;
 
- user_proj mprj (.user_clk(user_clock2),
+ user_proj_example mprj (.user_clk(user_clock2),
     .wb_clk_i(wb_clk_i),
     .wb_rst_i(wb_rst_i),
     .wbs_ack_o(wbs_ack_o),
