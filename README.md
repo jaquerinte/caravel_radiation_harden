@@ -10,6 +10,8 @@
 
 ![](readme_data/space_shuttle_patch_crop.png)
 
+
+
 ### **Main Version of the chip: 2.0V EXTENDED**  
 
 <br/>
@@ -46,6 +48,9 @@
 - Version 1.0V:
   - Implemented ECC registers for 8 registers.
 
+## **Current Look Of The Chip**
+![](readme_data/Selection_005.png)
+
 ## **Description**
 
 The main goal of this project is to design open source radiation harden techniques. For now the space industry is a very close source and restricted IP industry.  But from ESA and his partners there is increasing interest in open source software and hardware for space use. So the main goal of the project is to implement some radiation harden features and test them under radiation to see how this techniques behave. Due to the nature of this project that is using a node that is close to the nodes use in this industry we will be easy to compare to current solutions.
@@ -59,6 +64,7 @@ This techniques are:
 - Shadow Register: The input value has a copy in the register file
   
 - ECC Shadow Register: The input value has a copy in the register file with ECC protection of 1 bit correction and 2 bit correction.
+
 
 ## **How To Use The Chip**
 This is a full example of how to use the chip in the context of caravel. For this example we will write a value to the register 1 and then we will read that value from the register file. This is also the first test of the chip. 
