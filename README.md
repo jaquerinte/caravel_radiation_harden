@@ -66,7 +66,7 @@ In order to assess the reliability of a chip we require methods to be able to ob
 The most vulnerable parts of a hardware design are its memory structures because they retain their previous values. Therefore, in our chip we have decided to focus on error detection and error correction specifically on flip-flops and registers which are the primary memory storage primitives. Therefore, our design is centered around a register file with 32, 32-bit registers implemented with flip-flops. We have implemented multiple reliability solutions such as different degrees of replication and ECC around this register file, which can be selectively configured and combined (with some limitations), in order to reliably detect whether errors occur, and in case they do, whether they can be corrected. Moreover, we include a redundant Monitoring Unit consisting of detailed event counters for each of the registers. This way, we can also assess the protection level offered by these different reliability methods and study their trade-offs in order to guide future developments. 
 
 In particular, our design has the following characteristics:
-- 32, 32-bit register file implemented with flip-flops, organised in 4 banks which can be used in parallel. Each register value can be individually set or inspected. The register file can be either clocked with a user controled signal, offering full control, or with the default chip clock.
+- 32, 32-bit register file implemented with flip-flops, organised in 8 banks which can be used in parallel. Each register value can be individually set or inspected. The register file can be either clocked with a user controled signal, offering full control, or with the default chip clock.
 
 - 4 different protection mechanisms, each of which can be enabled selectively and in combination with others:
   - Error Correction Code (ECC): ECC with 1 bit correction and 2 bit correction.
@@ -213,7 +213,7 @@ For this mode the data value is stored with out any protection in the register f
 ## **Block Description**
 The main code part is in the [ecc_registers](verilog/rtl/ecc_registers) directory inside the [rtl](verilog/rtl) directory. The [user_proj_example.v](https://github.com/jaquerinte/caravel_radiation_harden/blob/main/verilog/rtl/user_proj_example.v) contains only the connections to connect the project wrapper with the register file. The module works in a black box manner, the values are inserted to the module and you can ask for a value inside of the memory and the output is the value requested with a status signal that tells if the value is correct without modifications, the value has been corrected or if the value data is invalid. It is important to note that if more that two bits are flip in the register value the system can not reliable determine if the value is incorrect.
 
-The module is implemented with 32 registers of 32-bit words, organised in 4 banks. The counters of monitoring unit have a 32-bit width, too.
+The module is implemented with 32 registers of 32-bit words, organised in 8 banks. The counters of monitoring unit have a 32-bit width, too.
 
 
 ## Module Ports:
@@ -271,9 +271,9 @@ Caravel offers multiple ways to interact with the user project inside it. These 
 - Input probes: 
   - la_data_in [0]       ⟶ rregister_i.
   - la_data_in [1]       ⟶ wregister_i.
-  - la_data_in [2]       ⟶ operation_type_i .
-  - la_data_in [7:3]     ⟶ register_i [4:0].
-  - la_data_in [31:8]    ⟶ Not connected.
+  - la_data_in [4:2]     ⟶ operation_type_i .
+  - la_data_in [9:5]     ⟶ register_i [5:0].
+  - la_data_in [31:10]   ⟶ Not connected.
   - la_data_in [63:32]   ⟶ data_to_register_i [31:0].
   - la_data_in [64]      ⟶ clk_i.
   - la_data_in [65]      ⟶ rst_i.
