@@ -3,9 +3,12 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Caravel Build](https://github.com/efabless/caravel_project_example/actions/workflows/caravel_build.yml/badge.svg)](https://github.com/efabless/caravel_project_example/actions/workflows/caravel_build.yml)
 
 ## **Authors**
-- Ivan Rodriguez-Ferrandez (UPC-BSC)
-- Alvaro Jover-Alvarez (UPC-BSC)
-- Leonidas Kosmidis (BSC-UPC)
+- Ivan Rodriguez-Ferrandez (UPC¹-BSC²)
+- Alvaro Jover-Alvarez (UPC¹-BSC²)
+- Leonidas Kosmidis (BSC²-UPC¹)
+<br/>
+¹ Universitat Politècnica de Catalunya (UPC) <br/>
+² Barcelona Supercomputing Center (BSC)
 
 
 ![](readme_data/space_shuttle_patch_crop.png)
@@ -20,9 +23,8 @@
 
 - Version 2.0V Extended:
   - Added support for the wishbone interface to access all of the internal register data.
-  - Added the PMU to have counters for write operations.
-  - Added the PMU counters for writes, reads, uncorrected errors and corrected errors for each of the 32 registers.
-  - Added duplicate PMU for have a copy of the values.
+  - Added a Monitoring Unit with counters for write and read operations, uncorrected and corrected errors for each of the 32 registers.
+  - The Monitoring Unit is redundant in order to provide reliable values
   
 - Version 2.0V:
   - Added support for shadow registers (duplication).
@@ -33,11 +35,11 @@
   - Bug fix wishbone interface counters.
   
 - Version 1.4V:
-  - Added storage in triplets (data triplication).
+  - Added option for TMR storage (Triple Modular Redundancy).
   
 - Version 1.3V:
   - Increase from 8 registers to 32 registers.
-  - Bug fix  in the wishbone interface to correct access the internal register 31.
+  - Bug fix in the wishbone interface to correct access the internal register 31.
 
 - Version 1.2V: 
   - Bug fix for the ECC generator.
@@ -53,21 +55,31 @@
 
 ## **Description**
 
-The main goal of this project is to design open source radiation harden techniques. For now the space industry is a very close source and restricted IP industry.  But from ESA and his partners there is increasing interest in open source software and hardware for space use. So the main goal of the project is to implement some radiation harden features and test them under radiation to see how this techniques behave. Due to the nature of this project that is using a node that is close to the nodes use in this industry we will be easy to compare to current solutions.
+The main goal of this project is to assess the reliability of the SkyWater 130nm manufacturing process and Open Source PDK, as well as to evaluate different reliability mitigation techniques. Currently, the space industry relies on custom designs implemented with older mature manufacturing technologies such as 130nm or 65nm, which feature fault-tolerant and radiation hardening features. However, due to the small volume of space chips and to the closed environment of commercial EDA tools, the cost for space-specific (and other critical industries with similar reliability requirements such as avionics) is prohibitive for non-large corporations already operating in this domain, which limits innovation significantly. We have experienced this limitation first hand in our research institution through our close collaboration with the European Space Agency (ESA) in the framework of several research projects we are leading, such as the GPU4S (GPU for Space) ESA-funded activity.
 
-In detail this project aims to test different techniques for error detection and correction in registers. In this case is implemented a 32 bit register file that we be use at the same time (with some limitations) with the different techniques selected.
-This techniques are:
-- ECC: ECC with 1 bit correction and 2 bit correction
+However, with SkyWater 130nm and OpenLane, there is a great opportunity for lowering the barrier to entry in the safety-critical chip design market. In order this to happen, it is necessary to characterise the reliability of a test chip under stressful conditions, such as different types of irradiation, thermal and others. For this reason, in this open source test chip we implement the infrastructure which will be required to perform such an assessment for this technology for the first time.
+
+In order to assess the reliability of a chip we require methods to be able to observe in a detailed way its internal state, so that not only we can identify whether errors (e.g. bitflips) have occurred, but also to know which part of the design has been affected. For this reason, the initial reliability assessment has to be performed in a design with relatively low complexity, high level of control and with appropriate facilities to provide the required information.
+
+The most vulnerable parts of a hardware design are its memory structures because they retain their previous values. Therefore, in our chip we have decided to focus on error detection and error correction specifically on flip-flops and registers which are the primary memory storage primitives. Therefore, our design is centered around a register file with 32, 32-bit registers implemented with flip-flops. We have implemented multiple reliability solutions such as different degrees of replication and ECC around this register file, which can be selectively configured and combined (with some limitations), in order to reliably detect whether errors occur, and in case they do, whether they can be corrected. Moreover, we include a redundant Monitoring Unit consisting of detailed event counters for each of the registers. This way, we can also assess the protection level offered by these different reliability methods and study their trade-offs in order to guide future developments. 
+
+In particular, our design has the following characteristics:
+- 32, 32-bit register file implemented with flip-flops, organised in 4 banks which can be used in parallel. Each register value can be individually set or inspected. The register file can be either clocked with a user controled signal, offering full control, or with the default chip clock.
+
+- 4 different protection mechanisms, each of which can be enabled selectively and in combination with others:
+  - Error Correction Code (ECC): ECC with 1 bit correction and 2 bit correction.
   
-- Triple Redundancy: The input value is triplicated in the register file
+  - Triple Redundancy: The input value is triplicated in the register file.
   
-- Shadow Register: The input value has a copy in the register file
+  - Shadow Register: The input value has a copy in the register file.
   
-- ECC Shadow Register: The input value has a copy in the register file with ECC protection of 1 bit correction and 2 bit correction.
+  - ECC Shadow Register: The input value has a copy in the register file with ECC protection of 1 bit correction and 2 bit correction.
+
+- Duplicated Monitoring Unit: Individual 32-bit counters per register, reporting write and read operations performed, as well as the number of detected and corrected errors. Both the monitoring registers and their combinational counter circuit is replicated, ensuring reliable information.
 
 
 ## **How To Use The Chip**
-This is a full example of how to use the chip in the context of caravel. For this example we will write a value to the register 1 and then we will read that value from the register file. This is also the first test of the chip. 
+This is a full example of how to use our design from caravel. In this example we write a value to the register 1 and then we read that value from the register file. This is the first, basic test of the chip. 
 
 ```C++
 
@@ -157,15 +169,15 @@ void main()
 
 
 ## **ECC Implementation**
-For the   of the code we use [Hamming code](https://en.wikipedia.org/wiki/Hamming_code#:~:text=In%20computer%20science%20and%20telecommunication,without%20detection%20of%20uncorrected%20errors.) for the implementation or the parity bits and correction.
-In this particularly case is implemented with 6 bits inside of the register (positions 1,2,4,8,16,32) and a extra bit at the last position of the 2 bit error detection.
+All registers in the register file are ECC protected. As an Error Correction Code for the implementation of the parity bits and correction, we use [Hamming code](https://en.wikipedia.org/wiki/Hamming_code#:~:text=In%20computer%20science%20and%20telecommunication,without%20detection%20of%20uncorrected%20errors.) 
+Our implementation uses 6 bits inside a register (in positions 1,2,4,8,16,32) and a extra bit at the last position for the 2 bit error detection.
 
 ## **Triple Redundancy Implementation**
-The triple redundancy is implemented using the same registers that are been use for the ECC memory. The main issue of using this is the reduction in the space available for registers. But triple redundancy and standard ECC register can be use at the same time. Maintaining the consistency and witch registers are use and is witch mode each register is bee use is a job of the user. 
+The Triple Modular Redundancy (TMR) is implemented within the same ECC protected register file. A consequence of this decision is that when TMR is enabled, the amount of available registers which can be used to store individual values is reduced. However, the benefit by this implementation choice is that redundancy and ECC protection can be used at the same time. It's up to the user software to use the appropriate registers based on the selected protection mode.
 
-In the chip can be at maximum of 8 triple redundancy registers and 8 ECC registers can be use at the same time. 
+In the TMR configuration, at most 8 triplicated registers can be used at the same time, as well as 8 ECC registers (one for each), if ECC is enabled. 
 
-The registers that can be use for triple redundancy are:
+Under the TMR configuration, the registers which are triplicated by the hardware when they are written/read are:
 - 00
 - 04
 - 08
@@ -175,31 +187,31 @@ The registers that can be use for triple redundancy are:
 - 24
 - 28
   
-When one of this triple redundancy only a set of registers for ECC can be use. The registers that can be use when one of triple redundancy is use is:
-- 00 ⟶ ECC register available 3
-- 04 ⟶ ECC register available 7
-- 08 ⟶ ECC register available 11
-- 12 ⟶ ECC register available 15
-- 16 ⟶ ECC register available 19
-- 20 ⟶ ECC register available 23
-- 24 ⟶ ECC register available 27
-- 28 ⟶ ECC register available 31
+If ECC is also enabled at the same time, its value is stored in the following register:
+- 00 ⟶ ECC register 3
+- 04 ⟶ ECC register 7
+- 08 ⟶ ECC register 11
+- 12 ⟶ ECC register 15
+- 16 ⟶ ECC register 19
+- 20 ⟶ ECC register 23
+- 24 ⟶ ECC register 27
+- 28 ⟶ ECC register 31
 
 ## **Shadow Register Implementation**
-The shadow register is implemented by only using the first 4 bits of register address for accessing the first 16 registers for store operations. The last bit of the address is use internally to store the value in a second register. So for example you store a value in the register 0 the shadow copy will be stored in the register 16. For this method only error detection is possible.
+The shadow register is implemented by using only the first 4 bits of register address for accessing the first 16 registers for store operations. The last bit of the address is used internally to store the value in a second register. If for example you store a value in the register 0, the shadow copy will be stored in the register 16. For this method only error detection is possible.
 
 ## **ECC Shadow Register Implementation**
-The ECC shadow register is implemented in a similar way of the shadow register but the values are store with the parity bits. In this case first the value is compare with the shadow register and second the not shadowed register is send to the parity verification to check the ECC value is correct, the output will be if the values has been corrected and/or was a mismatch between the values.
+The ECC shadow register is implemented in a similar way with the shadow register, but the values are stored with the parity bits. In this case, first the value is compared with the shadow register and second the non-shadowed register is sent to the Parity Verification circuitry to check whether the ECC value is correct. The output of this circuit specifies whether the values have been corrected and/or there was a mismatch between the values.
 
 
 ## **No Protection Implementation**
-For this mode the data value is store with out any protection in the register file. 
+For this mode the data value is stored with out any protection in the register file. 
 
 
 ## **Block Description**
-The main code part is in the ecc_registers folder inside of the rtl folder. The user_proj.v contains only the connections to connect the project wrapper with the register file. The module works in a black box manner, the values are inserted to the module and you can ask for a value inside of the memory and the output is the value requested with a status signal that tells if the value is correct without modifications, the value has been corrected or if the value data is invalid. Is important to notice that if more that two bits are flip in the register value the system can not reliable determine if the value is incorrect.
+The main code part is in the [ecc_registers](verilog/rtl/ecc_registers) directory inside the [rtl](verilog/rtl) directory. The user_proj.v contains only the connections to connect the project wrapper with the register file. The module works in a black box manner, the values are inserted to the module and you can ask for a value inside of the memory and the output is the value requested with a status signal that tells if the value is correct without modifications, the value has been corrected or if the value data is invalid. It is important to note that if more that two bits are flip in the register value the system can not reliable determine if the value is incorrect.
 
-The module is implemented with 32 bit word size and 32 registers. The counters are 32 bit counters.
+The module is implemented with 32 registers of 32-bit words, organised in 4 banks. The counters of monitoring unit have a 32-bit width, too.
 
 
 ## Module Ports:
@@ -244,12 +256,12 @@ Also some extra ports can be use in the case to add connection to a [wishbone bu
   - rdata_o [31:0]: Wishbone data output.
 
 ## Caravel Connections
-The module is connected to the [caravel](https://github.com/efabless/caravel) project so in this section we will define how is connected to the processor in order to interact with it.
+The module is connected to the [caravel](https://github.com/efabless/caravel) project so in this section explain how it is connected to the processor in order to interact with it.
 
-Caravel offers multiple way to interact with the user project inside of it. This ways are GPIO ports, logic analyzer probes, and the Wishbone interconnection, user maskable interrupt signals. 
+Caravel offers multiple ways to interact with the user project inside it. These ways are GPIO ports, logic analyzer probes, the Wishbone interconnection and user maskable interrupt signals. 
 
 ### **GPIO Connections**
-- GPIO pins [19:0] are not been use.
+- GPIO pins [19:0] are not used.
 - GPIO pins [35:20] are connected to store_data_o [15:0].
 - GPIO pins [37:36] are connected to operation:result_o [1:0].
   
@@ -286,21 +298,21 @@ The ecc registers module is compose of a set of multiple sub-modules. The follow
 <div align="center"> Block diagram of the implemented verilog. </div>
 
 ### **Module List**
-- Parity calculator. This module takes the input data and calculate the parity bits that will be store in the registers.
+- Parity calculator. This module takes the input data and calculates the parity bits that will be stored in the registers.
 - Register data. This module contains all of the registers and stores the data with the parity bits.
-- Data verificator. This modules takes the input value form the Register data and the parity bits and verifies and corrects (if needed) the value.
-- decoder_output. This module is a skeleton module that servers only to get the signals to the top module.
-- state counters (PMU). This module contains all of the counters that keep track of the number of reads, number of 1 bit flip occurrences and number of 2 bit flip occurrences.
+- Data verifier. This modules takes the input value from the Register data and the parity bits and verifies and corrects (if needed) the value.
+- decoder_output. This module is a skeleton module that serves only to get the signals to the top module.
+- state counters (Monitoring Unit). This module contains all of the counters that keep track of the number of reads, writes, single bit flip occurrences and 2 bit flip occurrences.
 
 ## **Wishbone Description**
 In this chip is implemented the wishbone to access the 32 bit counters and also to access the internal registers  in order to modify the first 32 bits for testing of the ECC capabilities.
 
 The chip have to modes, operation mode where it performs the register file operations or in wishbone operation. The both modes are independent and can not be operated at the same time.
 
- ### **Address Space**
+ ### **Memory Map**
 
-Each of the possible accesses of the wishbone has a predefined address to access. Following the design of caravel the first address is the 0x3000_0000. All of the possible address that are defined are configure to be read from or write to the wishbone interface.
-Regarding the PMU, now that you can access a counter per each of the registers. So the base address of the PMU points to the reads form the register 0, the following address point to writes, corrected errors, uncorrected errors. So each set of counters are separate by 4 address. so  hereinafter this is  the list of implemented addresses for the chip.
+Each of the possible accesses of the wishbone has a predefined address to access. Following the design of caravel the first address is the 0x3000_0000. All the possible addresses that are defined are configured to be read from or write to the wishbone interface.
+Regarding the Monitoring Unit (PMU), you can access a counter per each of the registers. So the base address of the PMU points to the reads from the register 0, the following address point to writes, corrected errors, uncorrected errors. So each set of counters are separate by 4 address. Below there is the list of memory mapped addresses for our design:
 
 - 0x3000_0000: Base address of the PMU-1.
   - 0x3000_0200: Max address of the PMU-1.
@@ -309,7 +321,7 @@ Regarding the PMU, now that you can access a counter per each of the registers. 
   - 0x3000_1004: total writes.
   - 0x3000_1008: total corrected errors.
   - 0x3000_100C: total uncorrected errors.
-- 0x3001_0000: Base address of the PMU2
+- 0x3001_0000: Base address of the PMU2 (Redundant Copy)
   - 0x3001_0200: Max address of the PMU2.
 - 0x3001_1000: PMU2 total
   - 0x3001_1000: total reads.
@@ -321,14 +333,14 @@ Regarding the PMU, now that you can access a counter per each of the registers. 
 
  ### **Software Example**
 
- This example is base in that this chip is connected to the caravel project. The main idea of the use of the wishbone interface is that you are performing operations and then you stop doing operations and you change the chip to wishbone access. In the following example I will show how to access the performance counter that counts the number of reads.
+ This example is based on the fact that this chip is connected to the caravel project. The main idea of the use of the wishbone interface is that you are performing operations and then you stop doing operations and you change the chip to wishbone access. In the following example we show how to access the performance counter that counts the number of reads:
 
-First we define the address that will be use for the access of counter in this case is the reads so we use the address 0x30000004.
+First we define the address that will be used for accessing the counter. Since we want to access the read counter, according to the memory map above, we have to use the address 0x30000004.
 ```C++
 #define reg_wb_counter (*(volatile unint32_t*)0x30000004)
 ``` 
 
-Second we operate the chip in a normal condition adding a value toa register and reading for it. 
+Second we operate the chip in a normal condition by adding a value to a register and reading it. 
 ```C++
 //##############################################
 //# Caravel GPIO configurations
@@ -353,7 +365,7 @@ reg_la2_data = 0x00000001;
 reg_la2_data = 0x00000000;
 // value is the GPIO [35:20]
 ``` 
-When we want to access the performance counter we start the switching to wishbone mode. First to tell the chip to stop operating this is achieve putting the rregister_i and wregister_i to 0.
+When we want to access the performance counter we switch to wishbone mode. First we sto tell the chip to stop operating this is achieve putting the rregister_i and wregister_i to 0.
 
 ```C++
 // clk
@@ -367,7 +379,7 @@ reg_la2_data = 0x00000001;
 reg_la2_data = 0x00000000;
 ``` 
 
-Then we need to deactivate the manual clock to switch the the wishbone clock. We doing that by deactivating the LA probes that access the clk and reset. 
+Then we need to deactivate the manual clock to switch the the wishbone clock. We do that by deactivating the LA probes that access the clk and reset. 
 ```C++
 // deactivate internal clk
 reg_la2_oenb = 0xFFFFFFF;
@@ -378,7 +390,7 @@ Now we can check the value accessing to the defined variable.
 // deactivate internal clk
  print (reg_wb_counter);
 ``` 
-Now is the full example code
+Below there is the full example code:
 
 ```C++
 #define reg_wb_counter (*(volatile unint32_t*)0x30000000)
@@ -429,9 +441,9 @@ void main()
 
 ## **Available Tests**
 
-For this project there is a set of test in order to verify the functionality described. The test are the following.
+We provide a set of tests that verifies all the described functionality. All tests have been tested both at RTL as well as at gate-level simulation. The test are the following:
 
-- la_test1: This test is the basic test, write a value with ECC to a register and then reads that value from the memory.
+- la_test1: This test is the most basic test, which writes a value with ECC to a register and then reads that value from the memory.
 
 - la_test2: This test, writes and reads all of the 32 registers of chip using ECC.
 
@@ -443,7 +455,7 @@ For this project there is a set of test in order to verify the functionality des
 
 - la_test6: This test, writes and reads all of the 16 registers using shadow registers.
 
-- la_test7: This test, writes in a register using a shadow register and modify the shadow register to verify that the error is detected.
+- la_test7: This test, writes in a register using a shadow register and modifies the shadow register to verify that the error is detected.
 
 - la_test8: This test writes and reads from one of the ECC shadow registers.
 
@@ -451,18 +463,18 @@ For this project there is a set of test in order to verify the functionality des
 
 - la_test10: This test, writes in a register using a ECC shadow register and modify the shadow register to verify that the error is detected.
 
-- la_test11: This test writes and reads from one register without using  any protection.
+- la_test11: This test writes and reads from one register without using any protection.
 
 - wb_test1: This test uses the wishbone interface to modify one bit of an internal register in order to test the ECC functionality.
 
-- wb_test2: This test uses the wishbone interface to modify one bit of an internal register and also makes some reads in oder to check the performance counters.
+- wb_test2: This test uses the wishbone interface to modify one bit of an internal register and also makes some reads in oder to check the monitoring counters.
 
-- wb_test3: This test uses the wishbone interface to modify one value  of an internal triple redundant register and also makes a red to check that the output value is correct and the corrected stage is detected.
+- wb_test3: This test uses the wishbone interface to modify one value of an internal triple redundant register and also makes a read to check that the output value is correct and the corrected stage is detected.
 
 - wb_test4: This test uses the wishbone interface to add a value per each of the 32 registers and then using the chip we read the 32 values. This is for testing the proper access of all of the registers.
 
-- wb_test5: This test is similar to the wb_test2 but verifies that the PMU-1 and PMU-2 have the same values for the total reads and corrected errors.
+- wb_test5: This test is similar to the wb_test2 but verifies that the two copies of the monitoring unit (PMU-1 and PMU-2) have the same values for the total reads and corrected errors.
 
-- wb_test6. Using the base of the wb_test2 this test try's to access a non valid address the expected result is that the program finish without problems and without halting the processors. 
+- wb_test6. Using the base of the wb_test2 this test tries to access a non valid address. The expected result is that the program finishes without problems and without halting the processor, because our implementation ignores the invalid access. 
 
-- wb_test7. Using as a base the la_test2, we write to all of the registers and we read all of them and we check some of the  individual counters to check that  the number of reads correctly as well the total reads and writes form the PMU-1 and PMU-2.
+- wb_test7. Using as a base the la_test2, we write to all registers and we read them again. We check some of the individual counters to check that the number of reads are correct, as well the total reads and writes from the PMU-1 and PMU-2.
