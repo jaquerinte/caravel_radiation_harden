@@ -269,9 +269,9 @@ Caravel offers multiple ways to interact with the user project inside it. These 
 - Input probes: 
   - la_data_in [0]       ⟶ rregister_i.
   - la_data_in [1]       ⟶ wregister_i.
-  - la_data_in [2]       ⟶ operation_type_i .
-  - la_data_in [7:3]     ⟶ register_i [4:0].
-  - la_data_in [31:8]    ⟶ Not connected.
+  - la_data_in [4:2]     ⟶ operation_type_i .
+  - la_data_in [9:5]     ⟶ register_i [5:0].
+  - la_data_in [31:10]   ⟶ Not connected.
   - la_data_in [63:32]   ⟶ data_to_register_i [31:0].
   - la_data_in [64]      ⟶ clk_i.
   - la_data_in [65]      ⟶ rst_i.
