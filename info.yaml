@@ -1,6 +1,6 @@
 ---
 project:
-  description: "Space Shuttle a test platform for testing radiation harden registers"
+  description: "Space Shuttle, a test platform for assessing the reliability of the SkyWater 130nm manufacturing process and Open Source PDK, as well as different reliability mitigation techniques"
   foundry: "SkyWater"
   git_url: "https://github.com/jaquerinte/caravel_radiation_harden.git"
   organization: "BSC"
