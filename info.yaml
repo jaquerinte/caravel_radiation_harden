@@ -15,5 +15,5 @@ project:
   category: "Direct memory access"
   top_level_netlist: "caravel/verilog/gl/caravel.v"
   user_level_netlist: "verilog/gl/user_project_wrapper.v"
-  version: "1.00"
+  version: "2.00"
   cover_image: "readme_data/space_shuttle_patch_crop.png"
