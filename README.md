@@ -52,7 +52,7 @@
 - Version 1.0V:
   - Implemented ECC registers for 8 registers.
 
-## **Current Look Of The Chip**
+## **Chip Layout**
 ![](readme_data/Selection_005.png)
 
 ## **Description**
@@ -211,9 +211,9 @@ For this mode the data value is stored with out any protection in the register f
 
 
 ## **Block Description**
-The main code part is in the [ecc_registers](verilog/rtl/ecc_registers) directory inside the [rtl](verilog/rtl) directory. The [user_proj_example.v](https://github.com/jaquerinte/caravel_radiation_harden/blob/main/verilog/rtl/user_proj_example.v) contains only the connections to connect the project wrapper with the register file. The module works in a black box manner, the values are inserted to the module and you can ask for a value inside of the memory and the output is the value requested with a status signal that tells if the value is correct without modifications, the value has been corrected or if the value data is invalid. It is important to note that if more that two bits are flip in the register value the system can not reliable determine if the value is incorrect.
+The main code part is in the [ecc_registers](verilog/rtl/ecc_registers) directory inside the [rtl](verilog/rtl) directory. The [user_proj_example.v](https://github.com/jaquerinte/caravel_radiation_harden/blob/main/verilog/rtl/user_proj_example.v) contains only the connections to connect the project wrapper with the register file. The module works in a black box manner, the values are inserted to the module and you can ask for a value inside of the memory and the output is the value requested with a status signal that tells if the value is correct without modifications, the value has been corrected or if the value data is invalid. It is important to note that if more that two bits are flipped in the register contents, then the system cannot reliably determine whether the value is incorrect.
 
-The module is implemented with 32 registers of 32-bit words, organised in 8 banks. The counters of monitoring unit have a 32-bit width, too.
+The module is implemented with 32 registers of 32-bit words, organised in 8 banks. The counters of monitoring unit have a 32-bit width, too. The protection mechanism which is used is defined by the signal operation_type_i as described below.
 
 
 ## Module Ports:
@@ -241,8 +241,8 @@ The module is implemented with 32 registers of 32-bit words, organised in 8 bank
 
   - operation_result_o [1:0]. This is a two bit output that indicates the sate of the data.  
     - **00**: Indicates that the data was in a correct state.
-    - **01**: Indicates that the data output is correct but was a bit flip.
-    - **10**: Indicates that the data is incorrect and was two bit flip.
+    - **01**: Indicates that the data output is correct but there was a bit flip.
+    - **10**: Indicates that the data is incorrect and there were two bit flips.
     - **11**: Not defined state
   - operational_o. Signal that indicates if the system is ready to accept petitions  for reading or writing. 
 
@@ -290,26 +290,26 @@ The wishbone connection is 1 to 1 with the user project wrapper.
 
 ### **User Maskable Interrupt Signals**
 
-This signals are not connected. 
+These signals are not connected. 
 
 
-## **Modules Description**
-The ecc registers module is compose of a set of multiple sub-modules. The following image is a representation of the modules and how each one of them interconnect.
+## **Description of the Modules **
+The ECC Registers module is composed of a set of multiple sub-modules. The following image is a representation of the modules and how each one of them is connected.
 
 ![](readme_data/output-crop.jpg)
 <div align="center"> Block diagram of the implemented verilog. </div>
 
 ### **Module List**
-- Parity calculator. This module takes the input data and calculates the parity bits that will be stored in the registers.
-- Register data. This module contains all of the registers and stores the data with the parity bits.
-- Data verifier. This modules takes the input value from the Register data and the parity bits and verifies and corrects (if needed) the value.
-- decoder_output. This module is a skeleton module that serves only to get the signals to the top module.
-- state counters (Monitoring Unit). This module contains all of the counters that keep track of the number of reads, writes, single bit flip occurrences and 2 bit flip occurrences.
+- [Parity calculator](verilog/rtl/ecc_registers/parity_calculator.v). This module takes the input data and calculates the parity bits that will be stored in the registers.
+- [Register data](verilog/rtl/ecc_registers/register_data.v). This module contains all of the registers and stores the data with the parity bits.
+- [Data verifier](verilog/rtl/ecc_registers/data_verificator.v). This modules takes the input value from the Register data and the parity bits and verifies and corrects (if needed) the value.
+- [Decoder_output](verilog/rtl/ecc_registers/decoder_output.v). This module is a skeleton module that serves only to get the signals to the top module.
+- [State counters](verilog/rtl/ecc_registers/state_counters.v) (Monitoring Unit). This module contains all of the counters that keep track of the number of reads, writes, single bit flip occurrences and 2 bit flip occurrences.
 
 ## **Wishbone Description**
-In this chip is implemented the wishbone to access the 32 bit counters and also to access the internal registers  in order to modify the first 32 bits for testing of the ECC capabilities.
+In this chip we use the wishbone bus to access the 32-bit counters, as well as the internal registers. This way we can modify the first 32 bits for testing the ECC capabilities.
 
-The chip have to modes, operation mode where it performs the register file operations or in wishbone operation. The both modes are independent and can not be operated at the same time.
+The chip has two modes. **Operation mode**, in which it performs the register file operations or in **wishbone operation**. Both modes are independent and cannot be used at the same time.
 
  ### **Memory Map**
 
