@@ -211,7 +211,7 @@ For this mode the data value is stored with out any protection in the register f
 ## **Block Description**
 The main code part is in the [ecc_registers](verilog/rtl/ecc_registers) directory inside the [rtl](verilog/rtl) directory. The user_proj.v contains only the connections to connect the project wrapper with the register file. The module works in a black box manner, the values are inserted to the module and you can ask for a value inside of the memory and the output is the value requested with a status signal that tells if the value is correct without modifications, the value has been corrected or if the value data is invalid. It is important to note that if more that two bits are flip in the register value the system can not reliable determine if the value is incorrect.
 
-The module is implemented with 32 registers of 32-bit words, organised in 4 banks. The counters of monitoring unit have a 32-bit width, too.
+The module is implemented with 32 registers of 32-bit words, organised in 8 banks. The counters of monitoring unit have a 32-bit width, too.
 
 
 ## Module Ports:
