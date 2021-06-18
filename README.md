@@ -216,7 +216,7 @@ The main code part is in the [ecc_registers](verilog/rtl/ecc_registers) director
 The module is implemented with 32 registers of 32-bit words, organised in 8 banks. The counters of monitoring unit have a 32-bit width, too. The protection mechanism which is used is defined by the signal operation_type_i as described below.
 
 
-## Module Ports:
+## **Module Ports**:
 - **Input Ports**
   -  clk_i: Clock signal for the module.
   
@@ -247,7 +247,7 @@ The module is implemented with 32 registers of 32-bit words, organised in 8 bank
   - operational_o. Signal that indicates if the system is ready to accept petitions  for reading or writing. 
 
 Also some extra ports can be use in the case to add connection to a [wishbone bus](https://en.wikipedia.org/wiki/Wishbone_(computer_bus)). For the current version the wishbone is only connected to the 32 bit counter that counts the number of 1 bit flip that have happened.
-## Module Extra Ports:
+## **Module Extra Ports**:
 - **Input Ports**
   - valid_i: Union of the clk and the strobe values for the wishbone bus
   - wstrb_i [3:0]: Wishbone strobe.
@@ -257,7 +257,7 @@ Also some extra ports can be use in the case to add connection to a [wishbone bu
   - ready_o. Wishbone ack.
   - rdata_o [31:0]: Wishbone data output.
 
-## Caravel Connections
+## **Caravel Connections**
 The module is connected to the [caravel](https://github.com/efabless/caravel) project so in this section explain how it is connected to the processor in order to interact with it.
 
 Caravel offers multiple ways to interact with the user project inside it. These ways are GPIO ports, logic analyzer probes, the Wishbone interconnection and user maskable interrupt signals. 
@@ -293,7 +293,7 @@ The wishbone connection is 1 to 1 with the user project wrapper.
 These signals are not connected. 
 
 
-## **Description of the Modules **
+## **Description of the Modules**
 The ECC Registers module is composed of a set of multiple sub-modules. The following image is a representation of the modules and how each one of them is connected.
 
 ![](readme_data/output-crop.jpg)
