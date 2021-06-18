@@ -10,8 +10,11 @@ project:
   project_name: "Caravel"
   project_id: "00000000"
   tags:
-    - "Radiation"
+    - "Reliability"
     - "Space"
+    - "Error Detection"
+    - "Error Mitigation"
+    - "Safety-Critical Systems"
   category: "Direct memory access"
   top_level_netlist: "caravel/verilog/gl/caravel.v"
   user_level_netlist: "verilog/gl/user_project_wrapper.v"
