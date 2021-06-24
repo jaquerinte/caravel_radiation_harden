@@ -7,7 +7,7 @@ project:
   organization_url: "https://www.bsc.es"
   owner: "Ivan Rodriguez-Ferrandez"
   process: "SKY130"
-  project_name: "Caravel"
+  project_name: "Space_Shuttle"
   project_id: "00000000"
   tags:
     - "Reliability"
