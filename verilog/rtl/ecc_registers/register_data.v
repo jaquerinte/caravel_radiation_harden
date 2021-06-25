@@ -73,14 +73,14 @@ module register_data #(
 
 
     //triple_redunancy calculation
-    assign  nand_1 = rregister_i & operation_type_i == 2'b01 ? r[register_i[REGDIRSIZE - 1: 2]][31:0]  ~& r[register_i[REGDIRSIZE - 1: 2]][70:39]: {WORD_SIZE + ECCBITS{1'b0}};
-    assign  nand_2 = rregister_i & operation_type_i == 2'b01 ? r[register_i[REGDIRSIZE - 1: 2]][70:39] ~& r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
-    assign  nand_3 = rregister_i & operation_type_i == 2'b01 ? r[register_i[REGDIRSIZE - 1: 2]][31:0]  ~& r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
+    assign  nand_1 = rregister_i & operation_type_i == 3'b001 ? r[register_i[REGDIRSIZE - 1: 2]][31:0]  ~& r[register_i[REGDIRSIZE - 1: 2]][70:39]: {WORD_SIZE + ECCBITS{1'b0}};
+    assign  nand_2 = rregister_i & operation_type_i == 3'b001 ? r[register_i[REGDIRSIZE - 1: 2]][70:39] ~& r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
+    assign  nand_3 = rregister_i & operation_type_i == 3'b001 ? r[register_i[REGDIRSIZE - 1: 2]][31:0]  ~& r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
 
     //triple_redunancy status
-    assign  xor_1 = rregister_i & operation_type_i == 2'b01 ?  r[register_i[REGDIRSIZE - 1: 2]][31:0]  ^ r[register_i[REGDIRSIZE - 1: 2]][70:39] : {WORD_SIZE + ECCBITS{1'b0}};
-    assign  xor_2 = rregister_i & operation_type_i == 2'b01 ?  r[register_i[REGDIRSIZE - 1: 2]][70:39] ^ r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
-    assign  xor_3 = rregister_i & operation_type_i == 2'b01 ?  r[register_i[REGDIRSIZE - 1: 2]][31:0]  ^ r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
+    assign  xor_1 = rregister_i & operation_type_i == 3'b001 ?  r[register_i[REGDIRSIZE - 1: 2]][31:0]  ^ r[register_i[REGDIRSIZE - 1: 2]][70:39] : {WORD_SIZE + ECCBITS{1'b0}};
+    assign  xor_2 = rregister_i & operation_type_i == 3'b001 ?  r[register_i[REGDIRSIZE - 1: 2]][70:39] ^ r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
+    assign  xor_3 = rregister_i & operation_type_i == 3'b001 ?  r[register_i[REGDIRSIZE - 1: 2]][31:0]  ^ r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
     
     assign xor_reduce_1 = |xor_1;
     assign xor_reduce_2 = |xor_2;
