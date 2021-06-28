@@ -19,28 +19,28 @@ module register_data #(
     )
     (
         `ifdef USE_POWER_PINS
-        inout vdda1,	// User area 1 3.3V supply
-        inout vdda2,	// User area 2 3.3V supply
-        inout vssa1,	// User area 1 analog ground
-        inout vssa2,	// User area 2 analog ground
-        inout vccd1,	// User area 1 1.8V supply
-        inout vccd2,	// User area 2 1.8v supply
-        inout vssd1,	// User area 1 digital ground
-        inout vssd2,	// User area 2 digital ground
+        inout wire vdda1,	// User area 1 3.3V supply
+        inout wire vdda2,	// User area 2 3.3V supply
+        inout wire vssa1,	// User area 1 analog ground
+        inout wire vssa2,	// User area 2 analog ground
+        inout wire vccd1,	// User area 1 1.8V supply
+        inout wire vccd2,	// User area 2 1.8v supply
+        inout wire vssd1,	// User area 1 digital ground
+        inout wire vssd2,	// User area 2 digital ground
         `endif
-        input  clk_i,
-        input  rst_i ,
-        input  [WORD_SIZE + ECCBITS - 1 : 0] data_to_register_i,
+        input  wire clk_i,
+        input  wire rst_i ,
+        input  wire [WORD_SIZE + ECCBITS - 1 : 0] data_to_register_i,
         //input  [((REGISTERS/ SEGMENTS) * (WORD_SIZE + ECCBITS)) - 1 : 0] data_to_register_i, // 156 interface
-        input  [REGDIRSIZE - 1 : 0] register_i ,
-        input  [WHISBONE_ADR - 1 : 0] wbs_adr_i,
-        input  [2 : 0] operation_type_i,
-        input  wregister_i ,
-        input  rregister_i ,
-        input  valid_i, 
-        input  [3 : 0] wstrb_i,
-        input  [WORD_SIZE -1 : 0] wdata_i,
-        input  wbs_we_i,
+        input  wire [REGDIRSIZE - 1 : 0] register_i ,
+        input  wire [WHISBONE_ADR - 1 : 0] wbs_adr_i,
+        input  wire [2 : 0] operation_type_i,
+        input  wire wregister_i ,
+        input  wire rregister_i ,
+        input  wire valid_i, 
+        input  wire [3 : 0] wstrb_i,
+        input  wire [WORD_SIZE -1 : 0] wdata_i,
+        input  wire wbs_we_i,
         output reg [WORD_SIZE + ECCBITS -1: 0] store_data_o ,
         output reg operational_o ,
         output reg ready_o,
@@ -53,6 +53,8 @@ module register_data #(
 
 //***Dumped Internal logic***
     // wires
+    //wire [WORD_SIZE - 1 : 0] majority_output;
+    //wire [WORD_SIZE - 1 : 0] majority_output_filter;
     wire [WORD_SIZE - 1 : 0] nand_1;
     wire [WORD_SIZE - 1 : 0] nand_2;
     wire [WORD_SIZE - 1 : 0] nand_3;
@@ -71,16 +73,36 @@ module register_data #(
     reg [((REGISTERS/ SEGMENTS) * (WORD_SIZE + ECCBITS)) - 1 : 0 ] r[0:SEGMENTS-1];
 
 
-
+    
     //triple_redunancy calculation
+    /*majority_gate_32 #(
+        .WORD_SIZE (WORD_SIZE)
+    )
+    inst_majority(
+        `ifdef USE_POWER_PINS
+        .vdda1(vdda1),	// User area 1 3.3V power
+        .vdda2(vdda2),	// User area 2 3.3V power
+        .vssa1(vssa1),	// User area 1 analog ground
+        .vssa2(vssa2),	// User area 2 analog ground
+        .vccd1(vccd1),	// User area 1 1.8V power
+        .vccd2(vccd2),	// User area 2 1.8V power
+        .vssd1(vssd1),	// User area 1 digital ground
+        .vssd2(vssd2),	// User area 2 digital ground
+        `endif
+        .value_1_i      (r[register_i[REGDIRSIZE - 1: 2]][31:0] ),
+        .value_2_i      (r[register_i[REGDIRSIZE - 1: 2]][70:39] ),
+        .value_3_i      (r[register_i[REGDIRSIZE - 1: 2]][109:78]),
+        .result_o       (majority_output)
+    );
+    assign majority_output_filter = rregister_i & operation_type_i == 3'b001 ? majority_output : {WORD_SIZE{1'b0}};*/
     assign  nand_1 = rregister_i & operation_type_i == 3'b001 ? r[register_i[REGDIRSIZE - 1: 2]][31:0]  ~& r[register_i[REGDIRSIZE - 1: 2]][70:39]: {WORD_SIZE + ECCBITS{1'b0}};
     assign  nand_2 = rregister_i & operation_type_i == 3'b001 ? r[register_i[REGDIRSIZE - 1: 2]][70:39] ~& r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
     assign  nand_3 = rregister_i & operation_type_i == 3'b001 ? r[register_i[REGDIRSIZE - 1: 2]][31:0]  ~& r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
 
     //triple_redunancy status
-    assign  xor_1 = rregister_i & operation_type_i == 3'b001 ?  r[register_i[REGDIRSIZE - 1: 2]][31:0]  ^ r[register_i[REGDIRSIZE - 1: 2]][70:39] : {WORD_SIZE + ECCBITS{1'b0}};
-    assign  xor_2 = rregister_i & operation_type_i == 3'b001 ?  r[register_i[REGDIRSIZE - 1: 2]][70:39] ^ r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
-    assign  xor_3 = rregister_i & operation_type_i == 3'b001 ?  r[register_i[REGDIRSIZE - 1: 2]][31:0]  ^ r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
+    assign  xor_1 = rregister_i & operation_type_i == 3'b001 ?  r[register_i[REGDIRSIZE - 1: 2]][31:0]  ^ r[register_i[REGDIRSIZE - 1: 2]][70:39] : {WORD_SIZE{1'b0}};
+    assign  xor_2 = rregister_i & operation_type_i == 3'b001 ?  r[register_i[REGDIRSIZE - 1: 2]][70:39] ^ r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE{1'b0}};
+    assign  xor_3 = rregister_i & operation_type_i == 3'b001 ?  r[register_i[REGDIRSIZE - 1: 2]][31:0]  ^ r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE{1'b0}};
     
     assign xor_reduce_1 = |xor_1;
     assign xor_reduce_2 = |xor_2;
