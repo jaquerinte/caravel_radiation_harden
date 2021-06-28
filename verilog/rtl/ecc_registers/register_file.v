@@ -17,40 +17,40 @@ module register_file #(
         parameter integer ECCBITS = 7,
         parameter integer WHISBONE_ADR = 32,
         parameter integer VERIFICATION_PINS = 2,
-        parameter integer COUNTERSIZE = 8
+        parameter integer COUNTERSIZE = 32
     )
     (
         `ifdef USE_POWER_PINS
-        inout vdda1,	// User area 1 3.3V supply
-        inout vdda2,	// User area 2 3.3V supply
-        inout vssa1,	// User area 1 analog ground
-        inout vssa2,	// User area 2 analog ground
-        inout vccd1,	// User area 1 1.8V supply
-        inout vccd2,	// User area 2 1.8v supply
-        inout vssd1,	// User area 1 digital ground
-        inout vssd2,	// User area 2 digital ground
+        inout wire vdda1,	// User area 1 3.3V supply
+        inout wire vdda2,	// User area 2 3.3V supply
+        inout wire vssa1,	// User area 1 analog ground
+        inout wire vssa2,	// User area 2 analog ground
+        inout wire vccd1,	// User area 1 1.8V supply
+        inout wire vccd2,	// User area 2 1.8v supply
+        inout wire vssd1,	// User area 1 digital ground
+        inout wire vssd2,	// User area 2 digital ground
         `endif
 
-        input  clk_i ,
-        input  rst_i ,
+        input  wire clk_i ,
+        input  wire rst_i ,
         // whishbone interface
-        input valid_i,
-        input [3:0] wstrb_i,
-        input [WORD_SIZE - 1 : 0] wdata_i,
-        input [WHISBONE_ADR - 1 : 0] wbs_adr_i,
-        input wbs_we_i,
+        input wire valid_i,
+        input wire [3:0] wstrb_i,
+        input wire [WORD_SIZE - 1 : 0] wdata_i,
+        input wire [WHISBONE_ADR - 1 : 0] wbs_adr_i,
+        input wire wbs_we_i,
         // end whishbone interface
-        input  [2 : 0] operation_type_i,
-        input  [WORD_SIZE - 1 : 0] data_to_register_i ,
-        input  [REGDIRSIZE - 1 : 0] register_i ,
-        input  wregister_i ,
-        input  rregister_i ,
-        output [WORD_SIZE - 1 : 0] store_data_o ,
-        output [VERIFICATION_PINS - 1 : 0] operation_result_o, 
+        input  wire [2 : 0] operation_type_i,
+        input  wire [WORD_SIZE - 1 : 0] data_to_register_i ,
+        input  wire [REGDIRSIZE - 1 : 0] register_i ,
+        input  wire wregister_i ,
+        input  wire rregister_i ,
+        output wire [WORD_SIZE - 1 : 0] store_data_o ,
+        output wire [VERIFICATION_PINS - 1 : 0] operation_result_o, 
         // whishbone interface
-        output ready_o,
-        output operational_o,
-        output [WORD_SIZE - 1 : 0] rdata_o
+        output wire ready_o,
+        output wire operational_o,
+        output wire [WORD_SIZE - 1 : 0] rdata_o
         // end whishbone interface
     );
 
@@ -232,8 +232,8 @@ module register_file #(
         .clk_i                    (clk_i ),
         .rst_i                    (rst_i ),
         .register_i               (register_i ),
-        .wregister_i               (wregister_i ),
-        .rregister_i               (rregister_i ),
+        .wregister_i              (wregister_i ),
+        .rregister_i              (rregister_i ),
         .valid_i                  (valid_i),
         .wstrb_i                  (wstrb_i),
         .wdata_i                  (wdata_i),
