@@ -16,6 +16,10 @@
 // Include caravel global defines for the number of the user project IO pads 
 `include "defines.v"
 `define USE_POWER_PINS
+`define UNIT_DELAY #1
+`define FUNCTIONAL
+`include "libs.ref/sky130_fd_sc_hd/verilog/primitives.v"
+`include "libs.ref/sky130_fd_sc_hd/verilog/sky130_fd_sc_hd.v"
 
 `ifdef GL
     // Assume default net type to be wire because GL netlists don't have the wire definitions
@@ -30,5 +34,6 @@
     `include "ecc_registers/decoder_output.v"
     `include "ecc_registers/parity_calculator.v"
     `include "ecc_registers/state_counters.v"
+    `include "ecc_registers/majority_gate.v"
     `include "user_proj_example.v"
 `endif

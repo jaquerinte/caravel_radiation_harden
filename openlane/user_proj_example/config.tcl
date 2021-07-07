@@ -26,12 +26,15 @@ set ::env(VERILOG_FILES) "\
 	$script_dir/../../verilog/rtl/ecc_registers/data_verificator.v \
 	$script_dir/../../verilog/rtl/ecc_registers/decoder_output.v \
 	$script_dir/../../verilog/rtl/ecc_registers/parity_calculator.v \
+	$script_dir/../../verilog/rtl/ecc_registers/majority_gate.v \
 	$script_dir/../../verilog/rtl/ecc_registers/state_counters.v"
 
 
 set ::env(CLOCK_PORT) ""
 set ::env(CLOCK_NET) "register_file.clk_i"
 set ::env(CLOCK_PERIOD) "10"
+
+set ::env(SYNTH_READ_BLACKBOX_LIB) 1
 
 
 

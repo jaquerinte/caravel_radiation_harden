@@ -14,7 +14,6 @@ module majority_gate_32 #(
         parameter integer WORD_SIZE = 32
     )
     (
-        `ifdef USE_POWER_PINS
         inout wire vdda1,	// User area 1 3.3V supply
         inout wire vdda2,	// User area 2 3.3V supply
         inout wire vssa1,	// User area 1 analog ground
@@ -23,7 +22,6 @@ module majority_gate_32 #(
         inout wire vccd2,	// User area 2 1.8v supply
         inout wire vssd1,	// User area 1 digital ground
         inout wire vssd2,	// User area 2 digital ground
-        `endif
 
         input wire [WORD_SIZE - 1 : 0] value_1_i,
         input wire [WORD_SIZE - 1 : 0] value_2_i,

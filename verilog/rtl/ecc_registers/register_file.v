@@ -20,7 +20,6 @@ module register_file #(
         parameter integer COUNTERSIZE = 32
     )
     (
-        `ifdef USE_POWER_PINS
         inout wire vdda1,	// User area 1 3.3V supply
         inout wire vdda2,	// User area 2 3.3V supply
         inout wire vssa1,	// User area 1 analog ground
@@ -29,7 +28,6 @@ module register_file #(
         inout wire vccd2,	// User area 2 1.8v supply
         inout wire vssd1,	// User area 1 digital ground
         inout wire vssd2,	// User area 2 digital ground
-        `endif
 
         input  wire clk_i ,
         input  wire rst_i ,
@@ -101,7 +99,6 @@ module register_file #(
 
     )
     inst_RD(
-        `ifdef USE_POWER_PINS
         .vdda1(vdda1),	// User area 1 3.3V power
         .vdda2(vdda2),	// User area 2 3.3V power
         .vssa1(vssa1),	// User area 1 analog ground
@@ -110,7 +107,6 @@ module register_file #(
         .vccd2(vccd2),	// User area 2 1.8V power
         .vssd1(vssd1),	// User area 1 digital ground
         .vssd2(vssd2),	// User area 2 digital ground
-        `endif
         .clk_i                     (clk_i ),
         .rst_i                     (rst_i ),
         .data_to_register_i        (data_to_register_PCW_RD),

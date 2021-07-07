@@ -18,7 +18,6 @@ module register_data #(
         parameter [19:0]  ADDRBASE     = 20'h3010_0
     )
     (
-        `ifdef USE_POWER_PINS
         inout wire vdda1,	// User area 1 3.3V supply
         inout wire vdda2,	// User area 2 3.3V supply
         inout wire vssa1,	// User area 1 analog ground
@@ -27,7 +26,6 @@ module register_data #(
         inout wire vccd2,	// User area 2 1.8v supply
         inout wire vssd1,	// User area 1 digital ground
         inout wire vssd2,	// User area 2 digital ground
-        `endif
         input  wire clk_i,
         input  wire rst_i ,
         input  wire [WORD_SIZE + ECCBITS - 1 : 0] data_to_register_i,
@@ -53,11 +51,11 @@ module register_data #(
 
 //***Dumped Internal logic***
     // wires
-    //wire [WORD_SIZE - 1 : 0] majority_output;
-    //wire [WORD_SIZE - 1 : 0] majority_output_filter;
-    wire [WORD_SIZE - 1 : 0] nand_1;
-    wire [WORD_SIZE - 1 : 0] nand_2;
-    wire [WORD_SIZE - 1 : 0] nand_3;
+    wire [WORD_SIZE - 1 : 0] majority_output;
+    wire [WORD_SIZE - 1 : 0] majority_output_filter;
+    //wire [WORD_SIZE - 1 : 0] nand_1;
+    //wire [WORD_SIZE - 1 : 0] nand_2;
+    //wire [WORD_SIZE - 1 : 0] nand_3;
 
     wire [WORD_SIZE - 1 : 0] xor_1;
     wire [WORD_SIZE - 1 : 0] xor_2;
@@ -75,11 +73,10 @@ module register_data #(
 
     
     //triple_redunancy calculation
-    /*majority_gate_32 #(
+    majority_gate_32 #(
         .WORD_SIZE (WORD_SIZE)
     )
     inst_majority(
-        `ifdef USE_POWER_PINS
         .vdda1(vdda1),	// User area 1 3.3V power
         .vdda2(vdda2),	// User area 2 3.3V power
         .vssa1(vssa1),	// User area 1 analog ground
@@ -88,16 +85,15 @@ module register_data #(
         .vccd2(vccd2),	// User area 2 1.8V power
         .vssd1(vssd1),	// User area 1 digital ground
         .vssd2(vssd2),	// User area 2 digital ground
-        `endif
         .value_1_i      (r[register_i[REGDIRSIZE - 1: 2]][31:0] ),
         .value_2_i      (r[register_i[REGDIRSIZE - 1: 2]][70:39] ),
         .value_3_i      (r[register_i[REGDIRSIZE - 1: 2]][109:78]),
         .result_o       (majority_output)
     );
-    assign majority_output_filter = rregister_i & operation_type_i == 3'b001 ? majority_output : {WORD_SIZE{1'b0}};*/
-    assign  nand_1 = rregister_i & operation_type_i == 3'b001 ? r[register_i[REGDIRSIZE - 1: 2]][31:0]  ~& r[register_i[REGDIRSIZE - 1: 2]][70:39]: {WORD_SIZE + ECCBITS{1'b0}};
-    assign  nand_2 = rregister_i & operation_type_i == 3'b001 ? r[register_i[REGDIRSIZE - 1: 2]][70:39] ~& r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
-    assign  nand_3 = rregister_i & operation_type_i == 3'b001 ? r[register_i[REGDIRSIZE - 1: 2]][31:0]  ~& r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
+    assign majority_output_filter = rregister_i & operation_type_i == 3'b001 ? majority_output : {WORD_SIZE{1'b0}};
+    //assign  nand_1 = rregister_i & operation_type_i == 3'b001 ? r[register_i[REGDIRSIZE - 1: 2]][31:0]  ~& r[register_i[REGDIRSIZE - 1: 2]][70:39]: {WORD_SIZE + ECCBITS{1'b0}};
+    //assign  nand_2 = rregister_i & operation_type_i == 3'b001 ? r[register_i[REGDIRSIZE - 1: 2]][70:39] ~& r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
+    //assign  nand_3 = rregister_i & operation_type_i == 3'b001 ? r[register_i[REGDIRSIZE - 1: 2]][31:0]  ~& r[register_i[REGDIRSIZE - 1: 2]][109:78]: {WORD_SIZE + ECCBITS{1'b0}};
 
     //triple_redunancy status
     assign  xor_1 = rregister_i & operation_type_i == 3'b001 ?  r[register_i[REGDIRSIZE - 1: 2]][31:0]  ^ r[register_i[REGDIRSIZE - 1: 2]][70:39] : {WORD_SIZE{1'b0}};
@@ -149,7 +145,8 @@ module register_data #(
             else if (operation_type_i == 3'b001) begin
                 redundat_validation_o[0] <= (xor_reduce_1 ^ xor_reduce_2) | (xor_reduce_2 ^ xor_reduce_3);
                 redundat_validation_o[1] <= xor_reduce_1 & xor_reduce_2 & xor_reduce_3 ;
-                store_data_o <= {7'b0000000,~(nand_1 & nand_2 & nand_3)};
+                //store_data_o <= {7'b0000000,~(nand_1 & nand_2 & nand_3)};
+                store_data_o <= {7'b0000000,majority_output_filter};
                 operational_o <= 1'b1;
             end
             else if (operation_type_i[1] == 1'b1) begin
