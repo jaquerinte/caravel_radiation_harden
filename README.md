@@ -17,7 +17,7 @@
 
 
 
-### **Main Version of the chip: 2.0V EXTENDED**  
+### **Main Version of the chip: 2.1V EXTENDED**  
 
 <br/>
 
