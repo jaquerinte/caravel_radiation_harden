@@ -44,13 +44,13 @@ set ::env(FP_PIN_ORDER_CFG) $script_dir/pin_order.cfg
 #set ::env(GLOBAL_ROUTER) cugr
 #set ::env(DETAILED_ROUTER drcu
 
-set ::env(PL_RESIZER_SETUP_MAX_BUFFER_PERCENT) 80
+#set ::env(PL_RESIZER_SETUP_MAX_BUFFER_PERCENT) 80
 set ::env(PL_TARGET_DENSITY) 0.20
 #set ::env(PL_RESIZER_HOLD_SLACK_MARGIN) 0.30
 #set ::env(PL_RESIZER_MAX_SLEW_MARGIN) 22
 #set ::env(PL_RESIZER_MAX_CAP_MARGIN) 28
 #set ::env(PL_RESIZER_HOLD_MAX_BUFFER_PERCENT) 20
-set ::env(GLB_RESIZER_SETUP_SLACK_MARGIN) 0.5
+#set ::env(GLB_RESIZER_SETUP_SLACK_MARGIN) 0.5
 #set ::env(PL_TIME_DRIVEN) 0
 
 
@@ -68,4 +68,4 @@ set ::env(DIODE_INSERTION_STRATEGY) 4
 # If you're going to use multiple power domains, then disable cvc run.
 set ::env(RUN_CVC) 1
 
-#set ::env(ROUTING_CORES) 6
+set ::env(ROUTING_CORES) 8
