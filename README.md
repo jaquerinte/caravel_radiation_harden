@@ -13,7 +13,6 @@
 ³ European Space Agency (ESA)
 
 
-<!---  # ![](readme_data/space_shuttle_patch_crop.png) -->
 
 
 
