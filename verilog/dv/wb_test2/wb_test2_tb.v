@@ -17,15 +17,28 @@
 
 `timescale 1 ns / 1 ps
 
+<<<<<<< HEAD:verilog/dv/wb_test2/wb_test2_tb.v
 `include "uprj_netlists.v"
 `include "caravel_netlists.v"
 `include "spiflash.v"
 `include "tbuart.v"
 
 module wb_test2_tb;
+=======
+module io_ports_tb;
+>>>>>>> 52a239652dd7a0722de75467858247e5f36b2500:verilog/dv/io_ports/io_ports_tb.v
 	reg clock;
     reg RSTB;
 	reg CSB;
+<<<<<<< HEAD:verilog/dv/wb_test2/wb_test2_tb.v
+=======
+	reg power1, power2;
+	reg power3, power4;
+
+	wire gpio;
+	wire [37:0] mprj_io;
+	wire [7:0] mprj_io_0;
+>>>>>>> 52a239652dd7a0722de75467858247e5f36b2500:verilog/dv/io_ports/io_ports_tb.v
 
 	reg power1, power2;
 
@@ -65,6 +78,7 @@ module wb_test2_tb;
 	end
 
 	initial begin
+<<<<<<< HEAD:verilog/dv/wb_test2/wb_test2_tb.v
 		wait(mprj_io[25:20] == 6'd0);
 		$display("WB Test 2 started");
 		wait(mprj_io[25:20] == 6'd1);
@@ -72,6 +86,21 @@ module wb_test2_tb;
 		wait(mprj_io[25:20] == 6'd3);
 		wait(mprj_io[25:20] == 6'd2);
 		wait(mprj_io[37:36] == 2'b00);
+=======
+	    // Observe Output pins [7:0]
+		wait(mprj_io_0 == 8'h01);
+		wait(mprj_io_0 == 8'h02);
+		wait(mprj_io_0 == 8'h03);
+		wait(mprj_io_0 == 8'h04);
+		wait(mprj_io_0 == 8'h05);
+		wait(mprj_io_0 == 8'h06);
+		wait(mprj_io_0 == 8'h07);
+		wait(mprj_io_0 == 8'h08);
+		wait(mprj_io_0 == 8'h09);
+		wait(mprj_io_0 == 8'h0A);   
+		wait(mprj_io_0 == 8'hFF);
+		wait(mprj_io_0 == 8'h00);
+>>>>>>> 52a239652dd7a0722de75467858247e5f36b2500:verilog/dv/io_ports/io_ports_tb.v
 		
 		$display("WB Test 2 Finish correctly");
 		//wait(checkbits == 16'h0002);
@@ -84,7 +113,7 @@ module wb_test2_tb;
 		CSB  <= 1'b1;		// Force CSB high
 		#2000;
 		RSTB <= 1'b1;	    	// Release reset
-		#170000;
+		#300000;
 		CSB = 1'b0;		// CSB can be released
 	end
 
@@ -102,32 +131,46 @@ module wb_test2_tb;
 	wire flash_io0;
 	wire flash_io1;
 
+<<<<<<< HEAD:verilog/dv/wb_test2/wb_test2_tb.v
 	wire VDD1V8;
     	wire VDD3V3;
 	wire VSS;
     
+=======
+	wire VDD3V3;
+	wire VDD1V8;
+	wire VSS;
+	
+>>>>>>> 52a239652dd7a0722de75467858247e5f36b2500:verilog/dv/io_ports/io_ports_tb.v
 	assign VDD3V3 = power1;
 	assign VDD1V8 = power2;
 	assign VSS = 1'b0;
 
 	caravel uut (
 		.vddio	  (VDD3V3),
+		.vddio_2  (VDD3V3),
 		.vssio	  (VSS),
+		.vssio_2  (VSS),
 		.vdda	  (VDD3V3),
 		.vssa	  (VSS),
 		.vccd	  (VDD1V8),
 		.vssd	  (VSS),
 		.vdda1    (VDD3V3),
+<<<<<<< HEAD:verilog/dv/wb_test2/wb_test2_tb.v
+=======
+		.vdda1_2  (VDD3V3),
+>>>>>>> 52a239652dd7a0722de75467858247e5f36b2500:verilog/dv/io_ports/io_ports_tb.v
 		.vdda2    (VDD3V3),
 		.vssa1	  (VSS),
+		.vssa1_2  (VSS),
 		.vssa2	  (VSS),
 		.vccd1	  (VDD1V8),
 		.vccd2	  (VDD1V8),
 		.vssd1	  (VSS),
 		.vssd2	  (VSS),
-		.clock	  (clock),
+		.clock    (clock),
 		.gpio     (gpio),
-        	.mprj_io  (mprj_io),
+		.mprj_io  (mprj_io),
 		.flash_csb(flash_csb),
 		.flash_clk(flash_clk),
 		.flash_io0(flash_io0),

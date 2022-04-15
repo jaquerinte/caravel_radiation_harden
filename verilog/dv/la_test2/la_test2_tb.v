@@ -17,11 +17,14 @@
 
 `timescale 1 ns / 1 ps
 
+<<<<<<< HEAD
 `include "uprj_netlists.v"
 `include "caravel_netlists.v"
 `include "spiflash.v"
 `include "tbuart.v"
 
+=======
+>>>>>>> 52a239652dd7a0722de75467858247e5f36b2500
 module la_test2_tb;
 	reg clock;
     reg RSTB;
@@ -29,6 +32,7 @@ module la_test2_tb;
 
 	reg power1, power2;
 
+<<<<<<< HEAD
     wire gpio;
 	wire uart_tx;
     wire [37:0] mprj_io;
@@ -36,6 +40,13 @@ module la_test2_tb;
 
 	assign checkbits  = mprj_io[31:16];
 	assign uart_tx = mprj_io[6];
+=======
+	wire gpio;
+	wire [37:0] mprj_io;
+	wire [15:0] checkbits;
+
+	assign checkbits = mprj_io[31:16];
+>>>>>>> 52a239652dd7a0722de75467858247e5f36b2500
 
 	always #12.5 clock <= (clock === 1'b0);
 
@@ -50,7 +61,11 @@ module la_test2_tb;
 		$dumpvars(0, la_test2_tb);
 
 		// Repeat cycles of 1000 clock edges as needed to complete testbench
+<<<<<<< HEAD
 		repeat (200) begin
+=======
+		repeat (75) begin
+>>>>>>> 52a239652dd7a0722de75467858247e5f36b2500
 			repeat (1000) @(posedge clock);
 			// $display("+1000 cycles");
 		end
@@ -65,6 +80,7 @@ module la_test2_tb;
 	end
 
 	initial begin
+<<<<<<< HEAD
 		$display("LA Test 2 started");
 		wait(mprj_io[25:20] == 6'd1);
 		wait(mprj_io[37:36] == 2'b00);
@@ -134,16 +150,20 @@ module la_test2_tb;
 		$display("LA Test 2 Finish correctly");
 		//wait(checkbits == 16'h0002);
 		#10000;
+=======
+		wait(checkbits == 16'hAB60);
+		$display("Monitor: Test 2 MPRJ-Logic Analyzer Started");
+		wait(checkbits == 16'hAB61);
+		$display("Monitor: Test 2 MPRJ-Logic Analyzer Passed");
+>>>>>>> 52a239652dd7a0722de75467858247e5f36b2500
 		$finish;
 	end
 
 	initial begin
 		RSTB <= 1'b0;
-		CSB  <= 1'b1;		// Force CSB high
+		#1000;
+		RSTB <= 1'b1;	    // Release reset
 		#2000;
-		RSTB <= 1'b1;	    	// Release reset
-		#170000;
-		CSB = 1'b0;		// CSB can be released
 	end
 
 	initial begin		// Power-up sequence
@@ -168,24 +188,31 @@ module la_test2_tb;
 	assign VDD1V8 = power2;
 	assign VSS = 1'b0;
 
+	assign mprj_io[3] = 1;  // Force CSB high.
+	assign mprj_io[0] = 0;  // Disable debug mode
+
 	caravel uut (
 		.vddio	  (VDD3V3),
+		.vddio_2  (VDD3V3),
 		.vssio	  (VSS),
+		.vssio_2  (VSS),
 		.vdda	  (VDD3V3),
 		.vssa	  (VSS),
 		.vccd	  (VDD1V8),
 		.vssd	  (VSS),
 		.vdda1    (VDD3V3),
+		.vdda1_2  (VDD3V3),
 		.vdda2    (VDD3V3),
 		.vssa1	  (VSS),
+		.vssa1_2  (VSS),
 		.vssa2	  (VSS),
 		.vccd1	  (VDD1V8),
 		.vccd2	  (VDD1V8),
 		.vssd1	  (VSS),
 		.vssd2	  (VSS),
-		.clock	  (clock),
+		.clock    (clock),
 		.gpio     (gpio),
-        	.mprj_io  (mprj_io),
+		.mprj_io  (mprj_io),
 		.flash_csb(flash_csb),
 		.flash_clk(flash_clk),
 		.flash_io0(flash_io0),

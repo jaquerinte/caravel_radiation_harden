@@ -16,8 +16,8 @@
  */
 
 // This include is relative to $CARAVEL_PATH (see Makefile)
-#include "verilog/dv/caravel/defs.h"
-#include "verilog/dv/caravel/stub.c"
+#include <defs.h>
+#include <stub.c>
 
 // --------------------------------------------------------
 
@@ -55,7 +55,8 @@ void main()
 	/* Set up the housekeeping SPI to be connected internally so	*/
 	/* that external pin changes don't affect it.			*/
 
-	reg_spimaster_config = 0xa002;	// Enable, prescaler = 2,
+	// reg_spimaster_config = 0xa002;	// Enable, prescaler = 2,
+        reg_spi_enable = 1;
                                         // connect to housekeeping SPI
 
 	// Connect the housekeeping SPI to the SPI master
@@ -121,6 +122,7 @@ void main()
         reg_mprj_xfer = 1;
         while (reg_mprj_xfer == 1);
 
+<<<<<<< HEAD
 	// Configure LA probes 
 	// outputs from the cpu are inputs for my project denoted for been 0 
 	// inputs to the cpu are outpus for my project denoted for been 1
@@ -132,12 +134,26 @@ void main()
 	
 	// Flag start of the test 
 	reg_mprj_datal = 0xAB400000;
+=======
+	// Configure All LA probes as inputs to the cpu 
+	reg_la0_oenb = reg_la0_iena = 0x00000000;    // [31:0]
+	reg_la1_oenb = reg_la1_iena = 0x00000000;    // [63:32]
+	reg_la2_oenb = reg_la2_iena = 0x00000000;    // [95:64]
+	reg_la3_oenb = reg_la3_iena = 0x00000000;    // [127:96]
+
+	// Flag start of the test
+	reg_mprj_datal = 0xAB600000;
+
+	// Configure LA[64] LA[65] as outputs from the cpu
+	reg_la2_oenb = reg_la2_iena = 0x00000003; 
+>>>>>>> 52a239652dd7a0722de75467858247e5f36b2500
 
 	// clock and reset
 	reg_la2_data = 0x00000003;
 	reg_la2_data = 0x00000000;
 	// end clock
 
+<<<<<<< HEAD
 
 	for (uint32_t i = 0; i < 32; ++i ){
 		add_value_to_register(i+1, i);
@@ -176,4 +192,25 @@ void main()
 
 	
 }
+=======
+        // DELAY
+        for (i=0; i<5; i=i+1) {}
 
+	// Toggle clk & de-assert reset
+	for (i=0; i<11; i=i+1) {
+		clk = !clk;
+		reg_la2_data = 0x00000000 | clk;
+	}
+
+        // reg_mprj_datal = 0xAB610000;
+
+        while (1){
+                if (reg_la0_data_in >= 0x05) {
+                        reg_mprj_datal = 0xAB610000;
+                        break;
+                }
+                
+        }
+>>>>>>> 52a239652dd7a0722de75467858247e5f36b2500
+
+}
