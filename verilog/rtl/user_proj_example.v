@@ -45,19 +45,8 @@ module user_proj_example #(
     parameter integer COUNTERSIZE = 32
 )(
 `ifdef USE_POWER_PINS
-<<<<<<< HEAD
-    inout wire vdda1,	// User area 1 3.3V supply
-    inout wire vdda2,	// User area 2 3.3V supply
-    inout wire vssa1,	// User area 1 analog ground
-    inout wire vssa2,	// User area 2 analog ground
-    inout wire vccd1,	// User area 1 1.8V supply
-    inout wire vccd2,	// User area 2 1.8v supply
-    inout wire vssd1,	// User area 1 digital ground
-    inout wire vssd2,	// User area 2 digital ground
-=======
     inout vccd1,	// User area 1 1.8V supply
     inout vssd1,	// User area 1 digital ground
->>>>>>> 52a239652dd7a0722de75467858247e5f36b2500
 `endif
 
     // Wishbone Slave ports (WB MI A)

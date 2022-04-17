@@ -19,12 +19,7 @@
 .SUFFIXES:
 .SILENT: clean all
 
-<<<<<<< HEAD
 PATTERNS = la_test1 la_test2 la_test3 la_test4 la_test5 la_test6 la_test7 la_test8 la_test9 la_test10 la_test11 wb_test1 wb_test2 wb_test3 wb_test4 wb_test5 wb_test6 wb_test7
-=======
-
-PATTERNS = io_ports la_test1 la_test2 wb_port mprj_stimulus
->>>>>>> 52a239652dd7a0722de75467858247e5f36b2500
 
 all:  ${PATTERNS}
 

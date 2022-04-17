@@ -17,14 +17,11 @@
 
 `timescale 1 ns / 1 ps
 
-<<<<<<< HEAD
 `include "uprj_netlists.v"
 `include "caravel_netlists.v"
 `include "spiflash.v"
 `include "tbuart.v"
 
-=======
->>>>>>> 52a239652dd7a0722de75467858247e5f36b2500
 module la_test2_tb;
 	reg clock;
     reg RSTB;
@@ -32,7 +29,6 @@ module la_test2_tb;
 
 	reg power1, power2;
 
-<<<<<<< HEAD
     wire gpio;
 	wire uart_tx;
     wire [37:0] mprj_io;
@@ -40,13 +36,6 @@ module la_test2_tb;
 
 	assign checkbits  = mprj_io[31:16];
 	assign uart_tx = mprj_io[6];
-=======
-	wire gpio;
-	wire [37:0] mprj_io;
-	wire [15:0] checkbits;
-
-	assign checkbits = mprj_io[31:16];
->>>>>>> 52a239652dd7a0722de75467858247e5f36b2500
 
 	always #12.5 clock <= (clock === 1'b0);
 
@@ -61,11 +50,7 @@ module la_test2_tb;
 		$dumpvars(0, la_test2_tb);
 
 		// Repeat cycles of 1000 clock edges as needed to complete testbench
-<<<<<<< HEAD
 		repeat (200) begin
-=======
-		repeat (75) begin
->>>>>>> 52a239652dd7a0722de75467858247e5f36b2500
 			repeat (1000) @(posedge clock);
 			// $display("+1000 cycles");
 		end
@@ -80,7 +65,6 @@ module la_test2_tb;
 	end
 
 	initial begin
-<<<<<<< HEAD
 		$display("LA Test 2 started");
 		wait(mprj_io[25:20] == 6'd1);
 		wait(mprj_io[37:36] == 2'b00);
@@ -150,12 +134,6 @@ module la_test2_tb;
 		$display("LA Test 2 Finish correctly");
 		//wait(checkbits == 16'h0002);
 		#10000;
-=======
-		wait(checkbits == 16'hAB60);
-		$display("Monitor: Test 2 MPRJ-Logic Analyzer Started");
-		wait(checkbits == 16'hAB61);
-		$display("Monitor: Test 2 MPRJ-Logic Analyzer Passed");
->>>>>>> 52a239652dd7a0722de75467858247e5f36b2500
 		$finish;
 	end
 

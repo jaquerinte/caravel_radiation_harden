@@ -24,13 +24,9 @@ BLOCKS := $(shell basename $(PWDD))
 CONFIG = caravel_user_project
 
 
-<<<<<<< HEAD:verilog/dv/la_test4/Makefile
-PATTERN = la_test4
-=======
 include $(MCW_ROOT)/verilog/dv/make/env.makefile
 include $(MCW_ROOT)/verilog/dv/make/var.makefile
 include $(MCW_ROOT)/verilog/dv/make/cpu.makefile
 include $(MCW_ROOT)/verilog/dv/make/sim.makefile
->>>>>>> 52a239652dd7a0722de75467858247e5f36b2500:verilog/dv/wb_port/Makefile
 
 

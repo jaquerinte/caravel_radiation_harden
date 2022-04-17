@@ -1,14 +1,11 @@
-<<<<<<< HEAD
 checks/
 *.vcd
 *.hex
 *.vvp
 *.elf
 *.log
-=======
 precheck_results
 *.hex*
 *.lst
 *.vcd
 *.gtkw
->>>>>>> 52a239652dd7a0722de75467858247e5f36b2500

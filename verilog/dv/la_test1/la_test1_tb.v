@@ -24,15 +24,9 @@ module la_test1_tb;
 
 	reg power1, power2;
 
-<<<<<<< HEAD
-    wire gpio;
-	wire uart_tx;
-    wire [37:0] mprj_io;
-=======
 	wire gpio;
 	wire uart_tx;
 	wire [37:0] mprj_io;
->>>>>>> 52a239652dd7a0722de75467858247e5f36b2500
 	wire [15:0] checkbits;
 
 	assign checkbits  = mprj_io[31:16];
@@ -68,16 +62,10 @@ module la_test1_tb;
 	initial begin
 		wait(mprj_io[24:20] == 5'b00000);
 		$display("LA Test 1 started");
-<<<<<<< HEAD
 		wait(mprj_io[24:20] == 5'b00010);
 		wait(mprj_io[24:20] == 5'b00001);
 		$display("LA Test 1 Finish correctly");
 		//wait(checkbits == 16'h0002);
-=======
-		wait(checkbits == 16'hAB41);
-		wait(checkbits == 16'hAB51);
-		$display("LA Test 2 passed");
->>>>>>> 52a239652dd7a0722de75467858247e5f36b2500
 		#10000;
 		$finish;
 	end

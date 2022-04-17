@@ -17,16 +17,12 @@
 
 `timescale 1 ns / 1 ps
 
-<<<<<<< HEAD:verilog/dv/la_test10/la_test10_tb.v
 `include "uprj_netlists.v"
 `include "caravel_netlists.v"
 `include "spiflash.v"
 `include "tbuart.v"
 
 module la_test10_tb;
-=======
-module wb_port_tb;
->>>>>>> 52a239652dd7a0722de75467858247e5f36b2500:verilog/dv/wb_port/wb_port_tb.v
 	reg clock;
     reg RSTB;
 	reg CSB;
@@ -38,18 +34,8 @@ module wb_port_tb;
     wire [37:0] mprj_io;
 	wire [15:0] checkbits;
 
-<<<<<<< HEAD:verilog/dv/la_test10/la_test10_tb.v
 	assign checkbits  = mprj_io[31:16];
 	assign uart_tx = mprj_io[6];
-=======
-	assign checkbits = mprj_io[31:16];
-
-	assign mprj_io[3] = 1'b1;
-
-	// External clock is used by default.  Make this artificially fast for the
-	// simulation.  Normally this would be a slow clock and the digital PLL
-	// would be the fast clock.
->>>>>>> 52a239652dd7a0722de75467858247e5f36b2500:verilog/dv/wb_port/wb_port_tb.v
 
 	always #12.5 clock <= (clock === 1'b0);
 
@@ -64,11 +50,7 @@ module wb_port_tb;
 		$dumpvars(0, la_test10_tb);
 
 		// Repeat cycles of 1000 clock edges as needed to complete testbench
-<<<<<<< HEAD:verilog/dv/la_test10/la_test10_tb.v
 		repeat (200) begin
-=======
-		repeat (70) begin
->>>>>>> 52a239652dd7a0722de75467858247e5f36b2500:verilog/dv/wb_port/wb_port_tb.v
 			repeat (1000) @(posedge clock);
 			// $display("+1000 cycles");
 		end
@@ -83,7 +65,6 @@ module wb_port_tb;
 	end
 
 	initial begin
-<<<<<<< HEAD:verilog/dv/la_test10/la_test10_tb.v
 		wait(mprj_io[25:20] == 6'd0);
 		$display("LA Test 10 started");
 		//wait(mprj_io[35:20] == 16'd255);
@@ -95,17 +76,6 @@ module wb_port_tb;
 		//wait(checkbits == 16'h0002);
 		#10000;
 		$finish;
-=======
-	   wait(checkbits == 16'hAB60);
-		$display("Monitor: MPRJ-Logic WB Started");
-		wait(checkbits == 16'hAB61);
-		`ifdef GL
-	    	$display("Monitor: Mega-Project WB (GL) Passed");
-		`else
-		    $display("Monitor: Mega-Project WB (RTL) Passed");
-		`endif
-	    $finish;
->>>>>>> 52a239652dd7a0722de75467858247e5f36b2500:verilog/dv/wb_port/wb_port_tb.v
 	end
 
 	initial begin
@@ -126,11 +96,7 @@ module wb_port_tb;
 		power2 <= 1'b1;
 	end
 
-<<<<<<< HEAD:verilog/dv/la_test10/la_test10_tb.v
     	wire flash_csb;
-=======
-	wire flash_csb;
->>>>>>> 52a239652dd7a0722de75467858247e5f36b2500:verilog/dv/wb_port/wb_port_tb.v
 	wire flash_clk;
 	wire flash_io0;
 	wire flash_io1;
@@ -153,10 +119,6 @@ module wb_port_tb;
 		.vccd	  (VDD1V8),
 		.vssd	  (VSS),
 		.vdda1    (VDD3V3),
-<<<<<<< HEAD:verilog/dv/la_test10/la_test10_tb.v
-=======
-		.vdda1_2  (VDD3V3),
->>>>>>> 52a239652dd7a0722de75467858247e5f36b2500:verilog/dv/wb_port/wb_port_tb.v
 		.vdda2    (VDD3V3),
 		.vssa1	  (VSS),
 		.vssa1_2  (VSS),

@@ -21,12 +21,7 @@ BLOCKS := $(shell basename $(PWDD))
 
 # ---- Include Partitioned Makefiles ----
 
-<<<<<<< HEAD
-## Simulation mode: RTL/GL
-SIM?=GL
-=======
 CONFIG = caravel_user_project
->>>>>>> 52a239652dd7a0722de75467858247e5f36b2500
 
 
 include $(MCW_ROOT)/verilog/dv/make/env.makefile
